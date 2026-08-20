@@ -1,0 +1,62 @@
+{
+  "provider": "zai",
+  "display_name": "Z.ai",
+  "product": "GLM Coding Plan",
+  "homepage": "https://docs.z.ai/devpack/overview",
+  "auth": "oauth",
+  "surfaces": ["cli", "ide"],
+  "checked": "2026-08-20",
+  "api_prices": [{ "model": "glm-5.3", "in": 1.4, "out": 4.4 }],
+  "plans": [
+    {
+      "id": "glm-lite",
+      "name": "Coding Plan Lite",
+      "price_usd_month": 18,
+      "price_usd_month_annual": 12.6,
+      "quota": {
+        "kind": "request_count",
+        "windows": [
+          { "period": "5h", "unit": "prompts", "amount": 80 },
+          { "period": "7d", "unit": "prompts", "amount": 400 },
+          { "period": "7d", "unit": "credits", "amount": 10000 }
+        ],
+        "included_value_usd": null,
+        "tokens_month": null,
+        "confidence": "published",
+        "note": "One user prompt fans out to roughly 15-20 internal model calls but counts as one against quota. Third-party figures for Pro and Max conflict ($72/$80 and $160/$168)."
+      },
+      "models": ["glm-5.3"],
+      "sources": ["https://docs.z.ai/devpack/overview"]
+    },
+    {
+      "id": "glm-pro",
+      "name": "Coding Plan Pro",
+      "price_usd_month": 80,
+      "price_usd_month_annual": 56,
+      "quota": {
+        "kind": "request_count",
+        "windows": [{ "period": "7d", "unit": "relative", "amount": 6, "relative_to": "glm-lite" }],
+        "included_value_usd": null,
+        "tokens_month": null,
+        "confidence": "published"
+      },
+      "models": ["glm-5.3"],
+      "sources": ["https://docs.z.ai/devpack/overview"]
+    },
+    {
+      "id": "glm-max",
+      "name": "Coding Plan Max",
+      "price_usd_month": 168,
+      "price_usd_month_annual": 117.6,
+      "quota": {
+        "kind": "request_count",
+        "windows": [{ "period": "7d", "unit": "relative", "amount": 14, "relative_to": "glm-lite" }],
+        "included_value_usd": null,
+        "tokens_month": null,
+        "confidence": "published"
+      },
+      "models": ["glm-5.3"],
+      "sources": ["https://docs.z.ai/devpack/overview"]
+    }
+  ]
+}

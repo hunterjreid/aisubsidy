@@ -1,0 +1,55 @@
+{
+  "provider": "minimax",
+  "display_name": "MiniMax",
+  "product": "MiniMax CLI",
+  "homepage": "https://platform.minimax.io/docs/token-plan/minimax-cli",
+  "auth": "oauth",
+  "surfaces": ["cli"],
+  "checked": "2026-08-20",
+  "api_prices": [],
+  "plans": [
+    {
+      "id": "minimax-plus",
+      "name": "Token Plan Plus",
+      "price_usd_month": 20,
+      "quota": {
+        "kind": "token_pool",
+        "windows": [],
+        "included_value_usd": null,
+        "tokens_month": null,
+        "confidence": "unknown",
+        "note": "OAuth is RFC 8628 device grant with PKCE via `mmx auth login`; tokens land in ~/.mmx/config.json and refresh automatically. Token allowance per tier not verified first-party."
+      },
+      "models": ["minimax-m3"],
+      "sources": ["https://platform.minimax.io/docs/token-plan/minimax-cli"]
+    },
+    {
+      "id": "minimax-max",
+      "name": "Token Plan Max",
+      "price_usd_month": 50,
+      "quota": {
+        "kind": "token_pool",
+        "windows": [],
+        "included_value_usd": null,
+        "tokens_month": null,
+        "confidence": "unknown"
+      },
+      "models": ["minimax-m3"],
+      "sources": ["https://platform.minimax.io/docs/token-plan/minimax-cli"]
+    },
+    {
+      "id": "minimax-ultra",
+      "name": "Token Plan Ultra",
+      "price_usd_month": 120,
+      "quota": {
+        "kind": "token_pool",
+        "windows": [],
+        "included_value_usd": null,
+        "tokens_month": null,
+        "confidence": "unknown"
+      },
+      "models": ["minimax-m3"],
+      "sources": ["https://platform.minimax.io/docs/token-plan/minimax-cli"]
+    }
+  ]
+}

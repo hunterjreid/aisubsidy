@@ -1,0 +1,69 @@
+{
+  "provider": "anthropic",
+  "display_name": "Anthropic",
+  "product": "Claude Code",
+  "homepage": "https://claude.com/product/claude-code",
+  "auth": "oauth",
+  "surfaces": ["cli", "ide", "web", "desktop"],
+  "checked": "2026-08-20",
+  "api_prices": [
+    { "model": "claude-opus-5", "in": 5.0, "out": 25.0 },
+    { "model": "claude-fable-5", "in": 10.0, "out": 50.0 },
+    { "model": "claude-sonnet-5", "in": 3.0, "out": 15.0, "note": "intro $2/$10 through 2026-08-31" },
+    { "model": "claude-haiku-4-5", "in": 1.0, "out": 5.0 }
+  ],
+  "plans": [
+    {
+      "id": "claude-pro",
+      "name": "Pro",
+      "price_usd_month": 20,
+      "quota": {
+        "kind": "rate_window",
+        "windows": [
+          { "period": "5h", "unit": "relative", "amount": 1, "relative_to": "claude-pro" },
+          { "period": "7d", "unit": "opaque", "note": "one all-model weekly cap plus a separate Sonnet-specific cap" }
+        ],
+        "included_value_usd": null,
+        "tokens_month": null,
+        "confidence": "unknown",
+        "note": "Anthropic publishes multipliers, not token counts. Only measurement resolves this."
+      },
+      "models": ["claude-opus-5", "claude-sonnet-5", "claude-haiku-4-5"],
+      "sources": ["https://claude.com/pricing"]
+    },
+    {
+      "id": "claude-max-5x",
+      "name": "Max 5x",
+      "price_usd_month": 100,
+      "quota": {
+        "kind": "rate_window",
+        "windows": [
+          { "period": "5h", "unit": "relative", "amount": 5, "relative_to": "claude-pro" },
+          { "period": "7d", "unit": "opaque" }
+        ],
+        "included_value_usd": null,
+        "tokens_month": null,
+        "confidence": "unknown"
+      },
+      "models": ["claude-opus-5", "claude-sonnet-5", "claude-haiku-4-5"],
+      "sources": ["https://claude.com/pricing"]
+    },
+    {
+      "id": "claude-max-20x",
+      "name": "Max 20x",
+      "price_usd_month": 200,
+      "quota": {
+        "kind": "rate_window",
+        "windows": [
+          { "period": "5h", "unit": "relative", "amount": 20, "relative_to": "claude-pro" },
+          { "period": "7d", "unit": "opaque" }
+        ],
+        "included_value_usd": null,
+        "tokens_month": null,
+        "confidence": "unknown"
+      },
+      "models": ["claude-opus-5", "claude-sonnet-5", "claude-haiku-4-5"],
+      "sources": ["https://claude.com/pricing"]
+    }
+  ]
+}

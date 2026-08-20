@@ -1,0 +1,30 @@
+{
+  "provider": "alibaba",
+  "display_name": "Alibaba",
+  "product": "Qwen Code",
+  "homepage": "https://qwenlm.github.io/qwen-code-docs/en/users/configuration/auth/",
+  "auth": "oauth",
+  "surfaces": ["cli"],
+  "checked": "2026-08-20",
+  "api_prices": [],
+  "plans": [
+    {
+      "id": "qwen-coding-plan",
+      "name": "Coding Plan",
+      "price_usd_month": 50,
+      "quota": {
+        "kind": "request_count",
+        "windows": [
+          { "period": "5h", "unit": "requests", "amount": 6000 },
+          { "period": "30d", "unit": "requests", "amount": 90000 }
+        ],
+        "included_value_usd": null,
+        "tokens_month": null,
+        "confidence": "published",
+        "note": "The free OAuth tier (1,000/day, later 100/day) and the 2,000/day Qwen Code CLI tier both closed 2026-04-15."
+      },
+      "models": ["qwen3-coder-next", "qwen3-coder-plus", "qwen3-max", "kimi-k2.5", "glm-5", "minimax-m2.5"],
+      "sources": ["https://qwenlm.github.io/qwen-code-docs/en/users/configuration/auth/"]
+    }
+  ]
+}

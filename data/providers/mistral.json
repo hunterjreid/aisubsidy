@@ -1,0 +1,30 @@
+{
+  "provider": "mistral",
+  "display_name": "Mistral AI",
+  "product": "Vibe CLI",
+  "homepage": "https://mistral.ai/news/devstral-2-vibe-cli/",
+  "auth": "both",
+  "surfaces": ["cli"],
+  "checked": "2026-08-20",
+  "api_prices": [
+    { "model": "mistral-medium-3.5", "in": 1.5, "out": 7.5 },
+    { "model": "devstral-2", "in": 0.4, "out": 2.0 }
+  ],
+  "plans": [
+    {
+      "id": "mistral-vibe-byo",
+      "name": "Vibe CLI (API-billed)",
+      "price_usd_month": 0,
+      "quota": {
+        "kind": "byok",
+        "windows": [],
+        "included_value_usd": null,
+        "tokens_month": null,
+        "confidence": "published",
+        "note": "The CLI itself is free and Apache-2.0. Usage bills through the Mistral API, so there is no subsidy to measure. Plans (Free, Pro, Education, Team, Enterprise) apply globally across Vibe, Studio and API. The Education tier is EUR 5.99/mo."
+      },
+      "models": ["mistral-medium-3.5", "devstral-2"],
+      "sources": ["https://docs.mistral.ai/admin/billing-usage/subscriptions"]
+    }
+  ]
+}

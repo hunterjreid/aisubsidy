@@ -1,0 +1,17 @@
+{
+  "name": "aisubsidy",
+  "version": "0.1.0",
+  "description": "How much are AI vendors subsidising your coding agent? A catalogue of OAuth coding plans and what a token actually costs on each.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node src/build.js",
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "probe": "node probe/probe.js",
+    "test": "node src/build.js"
+  },
+  "files": ["src", "data", "web", "probe"],
+  "keywords": ["ai", "pricing", "claude-code", "codex", "copilot", "cursor", "oauth", "tokens"]
+}

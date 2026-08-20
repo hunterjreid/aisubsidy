@@ -1,0 +1,54 @@
+{
+  "provider": "cursor",
+  "display_name": "Cursor",
+  "product": "Cursor",
+  "homepage": "https://cursor.com/pricing",
+  "auth": "oauth",
+  "surfaces": ["ide", "cli"],
+  "checked": "2026-08-20",
+  "api_prices": [
+    { "model": "cursor-auto", "in": 1.25, "out": 6.0, "note": "Auto mode is billed flat and does not draw from the credit pool" }
+  ],
+  "plans": [
+    {
+      "id": "cursor-pro",
+      "name": "Pro",
+      "price_usd_month": 20,
+      "quota": {
+        "kind": "credit_pool",
+        "included_value_usd": 20,
+        "tokens_month": null,
+        "confidence": "published",
+        "note": "Two pools: Cursor's own models are generous, third-party models bill at API rates"
+      },
+      "models": [],
+      "sources": ["https://cursor.com/pricing"]
+    },
+    {
+      "id": "cursor-pro-plus",
+      "name": "Pro+",
+      "price_usd_month": 60,
+      "quota": {
+        "kind": "credit_pool",
+        "included_value_usd": 70,
+        "tokens_month": null,
+        "confidence": "published"
+      },
+      "models": [],
+      "sources": ["https://cursor.com/pricing"]
+    },
+    {
+      "id": "cursor-ultra",
+      "name": "Ultra",
+      "price_usd_month": 200,
+      "quota": {
+        "kind": "credit_pool",
+        "included_value_usd": 400,
+        "tokens_month": null,
+        "confidence": "published"
+      },
+      "models": [],
+      "sources": ["https://cursor.com/pricing"]
+    }
+  ]
+}

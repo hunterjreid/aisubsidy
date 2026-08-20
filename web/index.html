@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>aisubsidy</title>
+<style>
+  :root{
+    --bg:#fbfaf8; --panel:#fff; --ink:#16150f; --muted:#6b6a61;
+    --line:#e6e3dc; --accent:#b8492e; --good:#2f6b4f; --warn:#8a6a1f;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#131311; --panel:#1b1a18; --ink:#eceae4; --muted:#928f86;
+           --line:#2c2a27; --accent:#e07a56; --good:#69b48d; --warn:#d0a94a; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+  .wrap{max-width:1180px;margin:0 auto;padding:40px 20px 80px}
+  h1{font-size:30px;margin:0 0 6px;letter-spacing:-.02em}
+  .tag{color:var(--accent);font-weight:600}
+  .lede{color:var(--muted);max-width:70ch;margin:0 0 28px}
+  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:26px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;min-width:120px}
+  .stat b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+  .stat span{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+  .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+  input,select{background:var(--panel);color:var(--ink);border:1px solid var(--line);
+    border-radius:8px;padding:8px 11px;font:inherit;font-size:14px}
+  input{flex:1;min-width:180px}
+  .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+  table{border-collapse:collapse;width:100%;min-width:820px;font-size:14px}
+  th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
+    cursor:pointer;user-select:none;position:sticky;top:0;background:var(--panel)}
+  th:hover{color:var(--ink)}
+  th.sorted::after{content:" \25be";color:var(--accent)}
+  th.sorted.asc::after{content:" \25b4"}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:color-mix(in srgb, var(--accent) 6%, transparent)}
+  .num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono)}
+  .mult{font-weight:700}
+  .mult.up{color:var(--good)} .mult.flat{color:var(--warn)}
+  .dash{color:var(--muted)}
+  .pill{font-size:11px;padding:2px 7px;border-radius:99px;border:1px solid var(--line);
+    color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .pill.published{color:var(--good);border-color:color-mix(in srgb,var(--good) 40%,transparent)}
+  .pill.unknown{color:var(--muted)}
+  .note{color:var(--muted);font-size:13px;margin-top:8px;white-space:normal}
+  details{margin-top:34px;border-top:1px solid var(--line);padding-top:20px}
+  summary{cursor:pointer;font-weight:600}
+  code{font-family:var(--mono);font-size:13px;background:color-mix(in srgb,var(--ink) 7%,transparent);
+    padding:1px 5px;border-radius:4px}
+  pre{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:14px;overflow-x:auto;font-family:var(--mono);font-size:13px}
+  footer{margin-top:40px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>ai<span class="tag">subsidy</span></h1>
+  <p class="lede">
+    Every OAuth coding plan, and what a token actually costs on it. Most vendors
+    publish a price and a multiplier and never the number in between, so this
+    tracks two things separately: what they publish, and what people measure.
+  </p>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="bar">
+    <input id="q" placeholder="Filter by provider, product or plan" autocomplete="off">
+    <select id="kind">
+      <option value="">All quota types</option>
+      <option value="credit_pool">Credit pool (dollar-denominated)</option>
+      <option value="rate_window">Rate window (opaque)</option>
+      <option value="request_count">Request count</option>
+      <option value="token_pool">Token pool</option>
+      <option value="byok">Bring your own key</option>
+    </select>
+    <select id="grade">
+      <option value="">Gradeable and opaque</option>
+      <option value="yes">Gradeable only</option>
+      <option value="no">Opaque only</option>
+    </select>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th data-k="provider_name">Provider</th>
+        <th data-k="name">Plan</th>
+        <th data-k="price_usd_month" class="num">$/mo</th>
+        <th data-k="quota.kind">Quota</th>
+        <th data-k="derived.credit_multiple" class="num">Credit multiple</th>
+        <th data-k="derived.usd_per_mtok" class="num">$/Mtok</th>
+        <th data-k="quota.confidence">Basis</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <p class="note" id="empty" hidden>Nothing matches that filter.</p>
+
+  <details open>
+    <summary>What the columns mean</summary>
+    <p class="note">
+      <b>Credit multiple</b> is dollars of usage included divided by dollars paid.
+      Cursor Ultra at $200 including $400 of usage is 2.0x. It is exact, published,
+      and directly comparable, but only exists for plans denominated in dollars.
+    </p>
+    <p class="note">
+      <b>$/Mtok</b> is the subscription price divided by the tokens it actually
+      buys. Anthropic, OpenAI, Google and xAI publish no token figure at all, so
+      this stays blank until somebody measures it. Run
+      <code>node probe/probe.js</code> to measure your own.
+    </p>
+    <p class="note">
+      <b>Basis</b> is where the number came from. <span class="pill published">published</span>
+      means the vendor states it, <span class="pill">derived</span> means it was
+      computed from something they state, <span class="pill">measured</span> means
+      it came from real session logs, <span class="pill unknown">unknown</span>
+      means nobody has a defensible figure yet.
+    </p>
+  </details>
+
+  <details>
+    <summary>Measure your own plan</summary>
+<pre>node probe/probe.js --days 30 --plan claude-max-20x</pre>
+    <p class="note">
+      Reads the token counts Claude Code and Codex already write to
+      <code>~/.claude/projects</code> and <code>~/.codex/sessions</code>, prices them
+      at that vendor's own list API rate, and divides by what you pay. Nothing
+      leaves your machine unless you pass <code>--submit</code>.
+    </p>
+  </details>
+
+  <footer>
+    Data lives in <code>data/providers/*.json</code>. Every plan carries a source
+    URL and a checked date. Corrections by pull request.
+  </footer>
+</div>
+
+<script>
+const get = (o, path) => path.split(".").reduce((a, k) => (a == null ? a : a[k]), o);
+const fmtMoney = (n) => n == null ? null : "$" + (n % 1 === 0 ? n : n.toFixed(2));
+const KIND_LABEL = {
+  credit_pool: "credit pool", rate_window: "rate window",
+  request_count: "requests", token_pool: "token pool", byok: "own key"
+};
+
+let PLANS = [];
+let sortKey = "derived.credit_multiple";
+let sortAsc = false;
+
+function render() {
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  const kind = document.getElementById("kind").value;
+  const grade = document.getElementById("grade").value;
+
+  let rows = PLANS.filter((p) => {
+    if (kind && p.quota.kind !== kind) return false;
+    if (grade === "yes" && !p.derived.gradeable) return false;
+    if (grade === "no" && p.derived.gradeable) return false;
+    if (!q) return true;
+    return [p.provider_name, p.product, p.name, p.id].join(" ").toLowerCase().includes(q);
+  });
+
+  rows.sort((a, b) => {
+    const x = get(a, sortKey), y = get(b, sortKey);
+    // Nulls always sink, whichever way the column is sorted.
+    if (x == null && y == null) return 0;
+    if (x == null) return 1;
+    if (y == null) return -1;
+    const cmp = typeof x === "number" ? x - y : String(x).localeCompare(String(y));
+    return sortAsc ? cmp : -cmp;
+  });
+
+  document.getElementById("empty").hidden = rows.length > 0;
+  document.getElementById("rows").innerHTML = rows.map((p) => {
+    const cm = p.derived.credit_multiple;
+    const cmClass = cm == null ? "dash" : "mult " + (cm > 1 ? "up" : "flat");
+    return `<tr>
+      <td>${esc(p.provider_name)}<br><span class="pill">${esc(p.product)}</span></td>
+      <td>${esc(p.name)}</td>
+      <td class="num">${p.price_usd_month == null ? '<span class="dash">?</span>' : fmtMoney(p.price_usd_month)}</td>
+      <td>${KIND_LABEL[p.quota.kind] || p.quota.kind}</td>
+      <td class="num ${cmClass}">${cm == null ? "&mdash;".replace("&mdash;","–") : cm.toFixed(2) + "x"}</td>
+      <td class="num">${p.derived.usd_per_mtok == null ? '<span class="dash">–</span>' : fmtMoney(p.derived.usd_per_mtok)}</td>
+      <td><span class="pill ${p.quota.confidence}">${p.quota.confidence}</span></td>
+    </tr>`;
+  }).join("");
+
+  document.querySelectorAll("th").forEach((th) => {
+    th.classList.toggle("sorted", th.dataset.k === sortKey);
+    th.classList.toggle("asc", th.dataset.k === sortKey && sortAsc);
+  });
+}
+
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+document.querySelectorAll("th").forEach((th) => th.addEventListener("click", () => {
+  if (sortKey === th.dataset.k) sortAsc = !sortAsc;
+  else { sortKey = th.dataset.k; sortAsc = false; }
+  render();
+}));
+["q", "kind", "grade"].forEach((id) =>
+  document.getElementById(id).addEventListener("input", render));
+
+fetch("/api/catalog").then((r) => r.json()).then((c) => {
+  PLANS = c.plans;
+  document.getElementById("stats").innerHTML = [
+    [c.stats.providers, "providers"],
+    [c.stats.plans, "plans"],
+    [c.stats.gradeable, "gradeable"],
+    [c.stats.opaque, "opaque"]
+  ].map(([n, label]) => `<div class="stat"><b>${n}</b><span>${label}</span></div>`).join("");
+  render();
+});
+</script>
+</body>
+</html>

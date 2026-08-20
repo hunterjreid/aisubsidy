@@ -1,0 +1,56 @@
+{
+  "provider": "xai",
+  "display_name": "xAI",
+  "product": "Grok Build",
+  "homepage": "https://x.ai/news/grok-build-cli",
+  "auth": "oauth",
+  "surfaces": ["cli"],
+  "checked": "2026-08-20",
+  "api_prices": [],
+  "plans": [
+    {
+      "id": "supergrok",
+      "name": "SuperGrok",
+      "price_usd_month": 30,
+      "quota": {
+        "kind": "rate_window",
+        "windows": [{ "period": "7d", "unit": "opaque" }],
+        "included_value_usd": null,
+        "tokens_month": null,
+        "confidence": "unknown",
+        "note": "No standalone Grok Build subscription. Access rides an xAI or X plan."
+      },
+      "models": ["grok-4.6"],
+      "sources": ["https://x.ai/news/grok-build-cli"]
+    },
+    {
+      "id": "x-premium-plus",
+      "name": "X Premium+",
+      "price_usd_month": 40,
+      "quota": {
+        "kind": "rate_window",
+        "windows": [{ "period": "7d", "unit": "opaque" }],
+        "included_value_usd": null,
+        "tokens_month": null,
+        "confidence": "unknown"
+      },
+      "models": ["grok-4.6"],
+      "sources": ["https://x.ai/news/grok-build-cli"]
+    },
+    {
+      "id": "supergrok-heavy",
+      "name": "SuperGrok Heavy",
+      "price_usd_month": 300,
+      "quota": {
+        "kind": "rate_window",
+        "windows": [{ "period": "7d", "unit": "opaque" }],
+        "included_value_usd": null,
+        "tokens_month": null,
+        "confidence": "unknown",
+        "note": "Highest limits. Grok Build launched Heavy-only on 2026-05-14 and opened to the cheaper tiers ten days later."
+      },
+      "models": ["grok-4.6"],
+      "sources": ["https://x.ai/news/grok-build-cli"]
+    }
+  ]
+}
