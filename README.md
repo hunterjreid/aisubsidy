@@ -2,6 +2,8 @@
 
 **How much is your AI vendor paying for you to code?**
 
+Live at **[aisubsidy.pages.dev](https://aisubsidy.pages.dev)**
+
 Nine vendors now train their own model and ship their own coding agent on an
 OAuth subscription: Claude Code, Codex, Grok Build, Antigravity, GLM Coding
 Plan, Kimi Code, Qwen Code, MiniMax CLI and Vibe. You pay a flat monthly fee and
@@ -102,7 +104,15 @@ node src/build.js     # validate every provider file, compile dist/catalog.json
 node src/server.js    # API and web table on http://localhost:8787
 ```
 
-Zero dependencies, Node 20+.
+Zero dependencies, Node 20+. To publish:
+
+```sh
+npm run deploy   # builds, validates, then pushes public/ to Cloudflare Pages
+```
+
+The same routes run locally on the Node server and in production as a Pages
+Function. Validation happens at build time, so bad data fails the build rather
+than shipping.
 
 | Route | Returns |
 |---|---|
