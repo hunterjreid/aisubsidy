@@ -6,7 +6,9 @@
   "auth": "oauth",
   "surfaces": ["cli", "ide"],
   "checked": "2026-08-20",
-  "api_prices": [{ "model": "glm-5.3", "in": 1.4, "out": 4.4 }],
+  "api_prices": [
+    { "model": "glm-5.3", "name": "GLM-5.3", "in": 1.4, "out": 4.4, "coding": true }
+  ],
   "plans": [
     {
       "id": "glm-lite",

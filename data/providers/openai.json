@@ -7,9 +7,9 @@
   "surfaces": ["cli", "ide", "web"],
   "checked": "2026-08-20",
   "api_prices": [
-    { "model": "gpt-5.6-sol", "in": 5.0, "out": 30.0 },
-    { "model": "gpt-5.6-terra", "in": 2.0, "out": 12.0 },
-    { "model": "gpt-5.6-luna", "in": 0.2, "out": 1.2 }
+    { "model": "gpt-5.6-sol", "name": "GPT-5.6 Sol", "in": 5.0, "out": 30.0, "coding": true, "note": "after the 2026-07-30 price cut" },
+    { "model": "gpt-5.6-terra", "name": "GPT-5.6 Terra", "in": 2.0, "out": 12.0, "coding": true },
+    { "model": "gpt-5.6-luna", "name": "GPT-5.6 Luna", "in": 0.2, "out": 1.2, "coding": false }
   ],
   "plans": [
     {

@@ -6,7 +6,10 @@
   "auth": "oauth",
   "surfaces": ["cli"],
   "checked": "2026-08-20",
-  "api_prices": [],
+  "api_prices": [
+    { "model": "qwen3.8-max", "name": "Qwen3.8 Max", "in": 2.0, "out": 6.0, "coding": true, "note": "cached input $0.25" },
+    { "model": "qwen3-coder-next", "name": "Qwen3 Coder Next", "in": null, "out": null, "coding": true, "note": "served on the Coding Plan; standalone API rate not verified first-party" }
+  ],
   "plans": [
     {
       "id": "qwen-coding-plan",

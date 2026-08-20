@@ -7,7 +7,7 @@
   "surfaces": ["cli", "ide"],
   "checked": "2026-08-20",
   "api_prices": [
-    { "model": "gemini-3.7-flash", "in": 0.75, "out": 3.75, "note": "introductory; $1.50/$7.50 from 2027-01-01" }
+    { "model": "gemini-3.7-flash", "name": "Gemini 3.7 Flash", "in": 0.75, "out": 3.75, "coding": true, "note": "introductory; $1.50/$7.50 from 2027-01-01" }
   ],
   "plans": [
     {

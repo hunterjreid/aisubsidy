@@ -34,6 +34,7 @@ const routes = {
   "/api/catalog": () => fresh(),
   "/api/providers": () => ({ providers: fresh().providers.map(stripPlans) }),
   "/api/plans": () => ({ plans: fresh().plans }),
+  "/api/models": () => ({ models: fresh().models }),
   "/api/stats": () => fresh().stats,
   "/api/health": () => {
     const c = fresh();
@@ -57,6 +58,13 @@ createServer((req, res) => {
   if (planMatch) {
     const plan = fresh().plans.find((p) => p.id === planMatch[1]);
     return plan ? json(res, plan) : json(res, { error: "no such plan" }, 404);
+  }
+
+  // /api/models/<id>  (ids carry dots, as in gpt-5.6-sol)
+  const modelMatch = path.match(/^\/api\/models\/([a-z0-9.-]+)$/);
+  if (modelMatch) {
+    const model = fresh().models.find((m) => m.id === modelMatch[1]);
+    return model ? json(res, model) : json(res, { error: "no such model" }, 404);
   }
 
   // /api/providers/<slug>

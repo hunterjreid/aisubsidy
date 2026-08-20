@@ -17,7 +17,7 @@ if (catalog.errors.length) {
 mkdirSync(join(root, "dist"), { recursive: true });
 writeFileSync(join(root, "dist", "catalog.json"), JSON.stringify(catalog, null, 2));
 
-const { providers, plans, gradeable, opaque } = catalog.stats;
-console.log(`ok  ${providers} providers, ${plans} plans`);
-console.log(`    ${gradeable} gradeable, ${opaque} opaque (vendor publishes no usable quota)`);
+const s = catalog.stats;
+console.log(`ok  ${s.providers} vendors, ${s.models} models (${s.coding_models} coding), ${s.plans} plans`);
+console.log(`    ${s.priced} models carry a first-party per-token rate, ${s.models - s.priced} do not`);
 console.log(`    dist/catalog.json`);

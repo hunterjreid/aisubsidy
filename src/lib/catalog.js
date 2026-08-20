@@ -18,10 +18,17 @@ function validateProvider(file, p) {
   need(/^\d{4}-\d{2}-\d{2}$/.test(p.checked || ""), "checked must be YYYY-MM-DD");
   need(Array.isArray(p.plans) && p.plans.length > 0, "plans must be a non-empty array");
 
+  need(Array.isArray(p.api_prices) && p.api_prices.length > 0,
+    "a provider here must ship its own model, so api_prices cannot be empty");
+
   for (const m of p.api_prices || []) {
     need(typeof m.model === "string", "api_prices entry needs a model");
-    need(typeof m.in === "number" && m.in >= 0, `api_prices ${m.model} needs numeric in`);
-    need(typeof m.out === "number" && m.out >= 0, `api_prices ${m.model} needs numeric out`);
+    need(typeof m.name === "string", `api_prices ${m.model} needs a display name`);
+    need(typeof m.coding === "boolean", `api_prices ${m.model} needs a coding flag`);
+    // null is allowed and means nobody has sourced a first-party rate. A blank
+    // cell is a true statement; a scraped number is a false one.
+    need(m.in === null || (typeof m.in === "number" && m.in >= 0), `api_prices ${m.model}: in must be a number or null`);
+    need(m.out === null || (typeof m.out === "number" && m.out >= 0), `api_prices ${m.model}: out must be a number or null`);
   }
 
   for (const plan of p.plans || []) {
@@ -111,15 +118,42 @@ export function loadCatalog(dir) {
   }
 
   const plans = providers.flatMap((p) => p.plans);
+
+  // One row per model, with the plans that grant access to it. This is the
+  // primary view: a vendor only belongs in this catalogue if it ships both its
+  // own model and its own coding agent, so every model here has a plan behind it.
+  const models = providers.flatMap((p) =>
+    (p.api_prices || []).map((m) => ({
+      id: m.model,
+      name: m.name,
+      coding: m.coding,
+      provider: p.provider,
+      provider_name: p.display_name,
+      product: p.product,
+      usd_in_mtok: m.in,
+      usd_out_mtok: m.out,
+      // A single comparable number. Coding agents read far more than they
+      // write, so a blended rate weighted to input reflects real spend better
+      // than either column alone. 3:1 is the ratio, stated rather than hidden.
+      blended_usd_mtok:
+        m.in === null || m.out === null ? null : Number(((m.in * 3 + m.out) / 4).toFixed(3)),
+      plans: plans.filter((pl) => (pl.models || []).includes(m.model)).map((pl) => pl.id),
+      note: m.note || null,
+      checked: p.checked
+    }))
+  );
+
   return {
     providers,
     plans,
+    models,
     errors,
     stats: {
       providers: providers.length,
+      models: models.length,
+      coding_models: models.filter((m) => m.coding).length,
       plans: plans.length,
-      gradeable: plans.filter((p) => p.derived.gradeable).length,
-      opaque: plans.filter((p) => !p.derived.gradeable).length
+      priced: models.filter((m) => m.blended_usd_mtok !== null).length
     }
   };
 }

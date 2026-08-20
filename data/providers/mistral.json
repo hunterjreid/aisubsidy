@@ -7,8 +7,8 @@
   "surfaces": ["cli"],
   "checked": "2026-08-20",
   "api_prices": [
-    { "model": "mistral-medium-3.5", "in": 1.5, "out": 7.5 },
-    { "model": "devstral-2", "in": 0.4, "out": 2.0 }
+    { "model": "devstral-2", "name": "Devstral 2", "in": 0.4, "out": 2.0, "coding": true },
+    { "model": "mistral-medium-3.5", "name": "Mistral Medium 3.5", "in": 1.5, "out": 7.5, "coding": false }
   ],
   "plans": [
     {

@@ -57,7 +57,7 @@ Pick `kind` by what the vendor actually meters:
 
 | kind | meaning | example |
 |---|---|---|
-| `credit_pool` | a dollar balance of usage | Copilot, Cursor |
+| `credit_pool` | a dollar balance of usage | none currently; harnesses use this shape and none of them qualify |
 | `rate_window` | an opaque cap per rolling window | Claude Code, Codex, Grok, Antigravity |
 | `request_count` | a countable number of prompts or calls | GLM, Kimi, Qwen |
 | `token_pool` | an explicit token allowance | MiniMax |

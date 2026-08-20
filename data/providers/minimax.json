@@ -6,7 +6,9 @@
   "auth": "oauth",
   "surfaces": ["cli"],
   "checked": "2026-08-20",
-  "api_prices": [],
+  "api_prices": [
+    { "model": "minimax-m3", "name": "MiniMax M3", "in": null, "out": null, "coding": true, "note": "no first-party per-token rate verified. Third-party figures for the MiniMax API start around $0.12/M but were not traceable to a MiniMax page." }
+  ],
   "plans": [
     {
       "id": "minimax-plus",

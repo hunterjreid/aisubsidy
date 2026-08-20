@@ -2,10 +2,10 @@
 
 **How much is your AI vendor paying for you to code?**
 
-Every coding agent worth using now sells an OAuth subscription instead of an API
-key: Claude Code, Codex, Copilot, Cursor, Grok Build, GLM Coding Plan, Kimi Code,
-Qwen Code, Antigravity, MiniMax. You pay a flat monthly fee and burn an unknown
-number of tokens. Nobody publishes the number in the middle.
+Nine vendors now train their own model and ship their own coding agent on an
+OAuth subscription: Claude Code, Codex, Grok Build, Antigravity, GLM Coding
+Plan, Kimi Code, Qwen Code, MiniMax CLI and Vibe. You pay a flat monthly fee and
+burn an unknown number of tokens. Nobody publishes the number in the middle.
 
 This is a catalogue of those plans, an API that serves it, and a probe that
 reads the token counts your agent already writes to disk and tells you what you
@@ -24,23 +24,53 @@ At this rate you would burn $17027.40/mo of API-priced tokens.
 
 ## Why this exists
 
-There are two kinds of plan, and only one of them can be compared honestly.
+Every plan in this catalogue is opaque, and that is the point.
 
-**Dollar-denominated plans** state what they include. Cursor Ultra is $200 and
-includes $400 of model usage, so it returns 2.00x. Copilot Pro is $10 and
-includes $15 of credits, so it returns 1.50x. That ratio is exact, published,
-and nobody puts it in a comparison table.
-
-**Opaque plans** state a price and a multiplier and nothing else. Anthropic
-publishes Pro, Max 5x and Max 20x without ever saying what 1x is. OpenAI
-publishes weekly message caps without saying how big a message is. Google
+Anthropic publishes Pro, Max 5x and Max 20x without ever saying what 1x is.
+OpenAI publishes weekly message caps without saying how big a message is. Google
 replaced a documented 1,000 requests per day with an undocumented weekly compute
-cap. For these, no amount of reading marketing pages produces a number.
+cap. Z.ai counts prompts, Kimi counts calls per five hours, and one prompt fans
+out to fifteen or twenty internal model calls. Not one of them tells you the
+token count.
 
-So the catalogue tracks the two separately and never blends them. A plan is
-`gradeable` or it is `opaque`, and an opaque plan shows a blank cell rather than
-a guess. The only thing that turns an opaque plan into a graded one is a
-measurement.
+So the catalogue holds two things that can be sourced, and refuses to invent the
+third:
+
+1. **What a token costs on the open API**, per model, from the vendor's own
+   pricing page. That is the denominator.
+2. **What the plan costs and what the vendor says it includes**, with a source
+   URL and a checked date.
+3. **What you actually consume**, which nobody publishes, so the probe measures
+   it from your own session logs.
+
+Multiply the tokens you burned by the vendor's own rate, divide by what you
+paid, and the subsidy falls out. No marketing page produces that number and no
+amount of reading one will.
+
+## Coding models today
+
+Blended $/Mtok, cheapest first. Blended weights input three to one against
+output, because a coding agent reads far more than it writes.
+
+| Model | Vendor | In | Out | Blended |
+|---|---|---:|---:|---:|
+| Devstral 2 | Mistral | $0.40 | $2.00 | **$0.80** |
+| Gemini 3.7 Flash | Google | $0.75 | $3.75 | **$1.50** |
+| Kimi K2.7 Code | Moonshot | $0.95 | $4.00 | **$1.71** |
+| GLM-5.3 | Z.ai | $1.40 | $4.40 | **$2.15** |
+| Qwen3.8 Max | Alibaba | $2.00 | $6.00 | **$3.00** |
+| Grok 4.6 | xAI | $2.00 | $6.00 | **$3.00** |
+| GPT-5.6 Terra | OpenAI | $2.00 | $12.00 | **$4.50** |
+| Claude Sonnet 5 | Anthropic | $3.00 | $15.00 | **$6.00** |
+| Kimi K3 | Moonshot | $3.00 | $15.00 | **$6.00** |
+| Claude Opus 5 | Anthropic | $5.00 | $25.00 | **$10.00** |
+| GPT-5.6 Sol | OpenAI | $5.00 | $30.00 | **$11.25** |
+| Qwen3 Coder Next | Alibaba | | | not sourced |
+| MiniMax M3 | MiniMax | | | not sourced |
+
+Fourteen times between the cheapest and the dearest. That spread is what makes
+the subsidy question worth asking: a flat monthly fee buys wildly different
+amounts of compute depending on whose model sits behind it.
 
 ## The probe
 
@@ -77,6 +107,8 @@ Zero dependencies, Node 20+.
 | Route | Returns |
 |---|---|
 | `GET /api/catalog` | everything, with derived metrics and stats |
+| `GET /api/models` | one row per model, with its rate and the plans that grant it |
+| `GET /api/models/:id` | one model |
 | `GET /api/plans` | flat list of every plan |
 | `GET /api/plans/:id` | one plan |
 | `GET /api/providers` | providers without their plans |
@@ -86,16 +118,18 @@ Zero dependencies, Node 20+.
 
 ## The columns
 
-**credit multiple** = dollars of usage included / dollars paid. Exact where it
-exists. Only exists for `credit_pool` plans.
+**$/Mtok in** and **$/Mtok out** are the vendor's own list API rates. Blank
+means no first-party rate was found, which currently applies to Qwen3 Coder Next
+and MiniMax M3.
 
-**$/Mtok** = monthly price / tokens the plan actually buys. Blank until somebody
-measures it, because the vendors do not publish the denominator.
+**blended** weights input three to one against output. A coding agent reads far
+more than it writes, so a single comparable number should lean on the input
+rate. The ratio is stated rather than hidden, and it is the sort key.
 
-**basis** = where the number came from. `published` means the vendor states it.
-`derived` means it was computed from something they state. `measured` means it
-came from session logs. `unknown` means nobody has a defensible figure yet, and
-a blank cell is the correct output.
+**basis** on a plan is where its quota figure came from. `published` means the
+vendor states it, `derived` means it was computed from something they state,
+`measured` means it came from session logs, and `unknown` means nobody has a
+defensible figure yet. A blank cell is the correct output for `unknown`.
 
 ## Rules the data follows
 
@@ -114,15 +148,31 @@ Add or correct a provider by editing one file in `data/providers/`, then run
 `node src/build.js`. CI runs the same validation on every pull request. See
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Coverage
+## Who qualifies
 
-Included: Anthropic, OpenAI, GitHub, Cursor, Z.ai, Moonshot, xAI, Google,
-Alibaba, MiniMax, Mistral.
+A vendor belongs here only if it ships **both its own model and its own coding
+agent**. Nine do:
 
-Deliberately excluded: vendors with no first-party OAuth coding plan. DeepSeek,
-Meta, NVIDIA, Upstage, SK, LG, Cohere and Thinking Machines all ship strong
-models and none of them sell a subscription you log a coding agent into. There
-is no subsidy to measure on an API key.
+| Vendor | Agent | Coding model |
+|---|---|---|
+| Anthropic | Claude Code | Claude Opus 5, Sonnet 5 |
+| OpenAI | Codex | GPT-5.6 Sol, Terra |
+| xAI | Grok Build | Grok 4.6 |
+| Google | Antigravity CLI | Gemini 3.7 Flash |
+| Z.ai | GLM Coding Plan | GLM-5.3 |
+| Moonshot | Kimi Code | Kimi K3, K2.7 Code |
+| Alibaba | Qwen Code | Qwen3.8 Max, Qwen3 Coder Next |
+| MiniMax | MiniMax CLI | MiniMax M3 |
+| Mistral | Vibe CLI | Devstral 2 |
+
+**Harnesses are excluded.** Cursor and GitHub Copilot are good products and
+neither trains the model you are billed for, so there is no subsidy of theirs to
+measure: they resell somebody else's tokens with a margin. Their credit pools
+are a retail markup question, not a subsidy question.
+
+**API-key-only vendors are excluded.** DeepSeek, Meta, NVIDIA, Upstage, SK, LG,
+Cohere and Thinking Machines ship strong models and none of them sell a
+subscription you log a coding agent into. Pay-per-token has nothing to subsidise.
 
 ## License
 

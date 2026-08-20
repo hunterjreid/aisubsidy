@@ -6,7 +6,16 @@
   "auth": "oauth",
   "surfaces": ["cli"],
   "checked": "2026-08-20",
-  "api_prices": [],
+  "api_prices": [
+    {
+      "model": "grok-4.6",
+      "name": "Grok 4.6",
+      "in": 2.0,
+      "out": 6.0,
+      "coding": true,
+      "note": "cached input $0.50. A prompt at or above 200K tokens reprices the whole request to $4 in / $12 out. Priority Processing is 2x."
+    }
+  ],
   "plans": [
     {
       "id": "supergrok",

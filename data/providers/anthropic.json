@@ -7,10 +7,10 @@
   "surfaces": ["cli", "ide", "web", "desktop"],
   "checked": "2026-08-20",
   "api_prices": [
-    { "model": "claude-opus-5", "in": 5.0, "out": 25.0 },
-    { "model": "claude-fable-5", "in": 10.0, "out": 50.0 },
-    { "model": "claude-sonnet-5", "in": 3.0, "out": 15.0, "note": "intro $2/$10 through 2026-08-31" },
-    { "model": "claude-haiku-4-5", "in": 1.0, "out": 5.0 }
+    { "model": "claude-opus-5", "name": "Claude Opus 5", "in": 5.0, "out": 25.0, "coding": true },
+    { "model": "claude-fable-5", "name": "Claude Fable 5", "in": 10.0, "out": 50.0, "coding": false },
+    { "model": "claude-sonnet-5", "name": "Claude Sonnet 5", "in": 3.0, "out": 15.0, "coding": true, "note": "intro $2/$10 through 2026-08-31" },
+    { "model": "claude-haiku-4-5", "name": "Claude Haiku 4.5", "in": 1.0, "out": 5.0, "coding": false }
   ],
   "plans": [
     {
