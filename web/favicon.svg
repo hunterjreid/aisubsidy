@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- A price tag with the number torn off: what every vendor publishes, and
+       what they leave out. Amber matches the max-spend column. -->
+  <rect width="64" height="64" rx="14" fill="#161615"/>
+  <path d="M30 12h14a8 8 0 0 1 8 8v14a6 6 0 0 1-1.76 4.24L34.2 54.28a6 6 0 0 1-8.49 0L11.72 40.29a6 6 0 0 1 0-8.49L27.76 15.76A6 6 0 0 1 30 12Z"
+        fill="none" stroke="#e8a33d" stroke-width="4" stroke-linejoin="round"/>
+  <circle cx="42" cy="22" r="4" fill="#e8a33d"/>
+  <text x="30" y="44" text-anchor="middle" font-family="ui-monospace,Menlo,monospace"
+        font-size="22" font-weight="700" fill="#ecebe6" transform="rotate(-45 30 38)">?</text>
+</svg>

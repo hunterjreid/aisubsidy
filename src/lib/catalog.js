@@ -102,6 +102,27 @@ const round = (n, d) => Number(n.toFixed(d));
 const WINDOWS_PER_MONTH = (periodHours) => (24 / periodHours) * 30;
 const PERIOD_HOURS = { "5h": 5, "7d": 168, "30d": 720 };
 
+// A vendor that meters in credits and whose credit rate is known needs no
+// measurement at all: the allowance times the peg IS the ceiling, exactly.
+// This beats a measured p90, so it runs first and wins.
+function attachCreditCeiling(provider, plans) {
+  const cs = provider.credit_system;
+  if (!cs?.usd_per_million_credits) return;
+
+  for (const plan of plans) {
+    const wk = (plan.quota.windows || []).find((w) => w.period === "7d" && w.unit === "credits");
+    if (!wk?.amount) continue;
+    const perWeek = (wk.amount / 1e6) * cs.usd_per_million_credits;
+    plan.derived.max_spend_usd_month = Math.round(perWeek * (30 / 7));
+    plan.derived.max_spend_basis = "credit cap";
+    plan.derived.max_spend_note =
+      `${wk.amount.toLocaleString("en-US")} credits a week at $${cs.usd_per_million_credits} per million. ` +
+      `Cache reads and writes cost no credits, so traffic worth far more than this at API rates ` +
+      `can fit inside the cap.`;
+    plan.derived.credit_cap_week = wk.amount;
+  }
+}
+
 function attachMaxSpend(provider, plans) {
   for (const m of provider.measurements || []) {
     const base = plans.find((p) => p.id === m.plan);
@@ -157,6 +178,7 @@ export function loadCatalog(dir) {
       plan.checked = raw.checked;
     }
     attachMaxSpend(raw, raw.plans || []);
+    attachCreditCeiling(raw, raw.plans || []);
     providers.push(raw);
   }
 

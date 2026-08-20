@@ -3,19 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>aisubsidy: independent analysis of AI coding plans</title>
+<title>How subsidised is your AI? Every OAuth coding plan measured</title>
 <meta name="description" content="Every OAuth coding plan you can log a CLI into, what it costs, and the most it could possibly hand you at the vendor's own API rates. Nine vendors that train their own model and ship their own coding agent.">
 <link rel="canonical" href="https://aisubsidy.pages.dev/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/favicon.svg">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="theme-color" content="#0e0e0d" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="aisubsidy">
-<meta property="og:title" content="aisubsidy: independent analysis of AI coding plans">
+<meta property="og:title" content="How subsidised is your AI?">
 <meta property="og:description" content="What each AI coding subscription costs, and the most it could possibly hand you at the vendor's own API rates.">
 <meta property="og:url" content="https://aisubsidy.pages.dev/">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="aisubsidy: independent analysis of AI coding plans">
+<meta name="twitter:title" content="How subsidised is your AI?">
 <meta name="twitter:description" content="What each AI coding subscription costs, and the most it could possibly hand you.">
 <link rel="alternate" type="text/plain" href="/llms.txt">
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -63,7 +65,10 @@
   @media (max-width:860px){ .hero{grid-template-columns:1fr;gap:32px;padding-bottom:36px} }
   .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(38px,5.4vw,62px);
     line-height:1.04;letter-spacing:-.02em;margin:0 0 20px}
-  .hero .sub{font-size:19px;line-height:1.45;margin:0;max-width:34ch;opacity:.82}
+  .hero .sub{font-size:19px;line-height:1.45;margin:0;max-width:36ch;opacity:.82}
+  .finding{margin:24px 0 0;padding-left:16px;border-left:3px solid var(--amber);
+    font-size:15.5px;line-height:1.5;color:var(--muted);max-width:44ch}
+  .finding b{color:var(--ink);font-weight:600}
 
   .cards{border-top:1px solid var(--line)}
   .cardlink{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;
@@ -192,8 +197,9 @@
 
   <header class="hero">
     <div>
-      <h1 class="hh">Independent analysis of AI coding plans</h1>
-      <p class="sub">What each subscription costs, and the most it could possibly hand you at the vendor's own API rates.</p>
+      <h1 class="hh">How subsidised is your AI?</h1>
+      <p class="sub">Every OAuth coding plan, what it costs, and what it actually hands you at the vendor's own API rates.</p>
+      <p class="finding" id="finding"></p>
     </div>
     <div class="cards">
       <a class="cardlink" href="/skill.md">
@@ -468,6 +474,12 @@ function renderFigs() {
     [usd(prices[0]) + " to " + usd(prices.at(-1)), "monthly price range", false],
     [(rates.at(-1) / rates[0]).toFixed(1) + "x", "spread between the cheapest and dearest coding model", true]
   ];
+  // The single most useful thing on the page, so it goes next to the headline.
+  document.getElementById("finding").innerHTML =
+    `Anthropic meters in credits at a flat <b>$7.50 per million</b>, and charges ` +
+    `<b>nothing</b> for cache reads or writes. On a real month those were 98% of the ` +
+    `tokens. That gap, not the plan price, is the subsidy.`;
+
   document.getElementById("figs").innerHTML = figs.map(([v, l, amber]) =>
     `<div class="fig"><b class="${amber ? "amber" : ""}">${esc(v)}</b><span>${esc(l)}</span></div>`
   ).join("");

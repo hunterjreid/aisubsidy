@@ -89,6 +89,7 @@ function page({ path, title, description, body, jsonld }) {
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
 <link rel="canonical" href="${url}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="theme-color" content="#0e0e0d" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)">

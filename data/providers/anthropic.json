@@ -4,18 +4,72 @@
   "product": "Claude Code",
   "homepage": "https://claude.com/product/claude-code",
   "auth": "oauth",
-  "surfaces": ["cli", "ide", "web", "desktop"],
+  "surfaces": [
+    "cli",
+    "ide",
+    "web",
+    "desktop"
+  ],
   "checked": "2026-08-20",
   "api_prices": [
-    { "model": "claude-opus-5", "name": "Claude Opus 5", "in": 5.0, "out": 25.0, "coding": true },
-    { "model": "claude-fable-5", "name": "Claude Fable 5", "in": 10.0, "out": 50.0, "coding": false },
-    { "model": "claude-sonnet-5", "name": "Claude Sonnet 5", "in": 3.0, "out": 15.0, "coding": true, "note": "intro $2/$10 through 2026-08-31" },
-    { "model": "claude-haiku-4-5", "name": "Claude Haiku 4.5", "in": 1.0, "out": 5.0, "coding": false }
+    {
+      "model": "claude-opus-5",
+      "name": "Claude Opus 5",
+      "in": 5,
+      "out": 25,
+      "coding": true
+    },
+    {
+      "model": "claude-fable-5",
+      "name": "Claude Fable 5",
+      "in": 10,
+      "out": 50,
+      "coding": false
+    },
+    {
+      "model": "claude-sonnet-5",
+      "name": "Claude Sonnet 5",
+      "in": 3,
+      "out": 15,
+      "coding": true,
+      "note": "intro $2/$10 through 2026-08-31"
+    },
+    {
+      "model": "claude-haiku-4-5",
+      "name": "Claude Haiku 4.5",
+      "in": 1,
+      "out": 5,
+      "coding": false
+    }
   ],
+  "credit_system": {
+    "usd_per_million_credits": 7.5,
+    "credits_per_token": {
+      "claude-opus-5": {
+        "in": 0.6667,
+        "out": 3.3333
+      },
+      "claude-sonnet-5": {
+        "in": 0.4,
+        "out": 2
+      },
+      "claude-haiku-4-5": {
+        "in": 0.1333,
+        "out": 0.6667
+      }
+    },
+    "free_in_credits": [
+      "cache_read",
+      "cache_write"
+    ],
+    "confidence": "derived",
+    "source": "https://she-llac.com/claude-limits",
+    "note": "Anthropic meters in credits and publishes neither the allowance nor the rate. The rates above were recovered from unrounded doubles in claude.ai SSE responses using a Stern-Brocot fraction search, then cross-checked here: dividing each model's list API price by its credit rate gives exactly $7.50 per million credits for every model in both directions, which is a dollar peg rather than a coincidence. Cache reads and writes appear to cost zero credits: crediting them puts a measured month at 7106% of its cap, crediting writes only puts it at 192%, and charging neither puts it at 108%, which matches the client's own reported weekly usage. Third-party reverse engineering, not a vendor statement."
+  },
   "measurements": [
     {
-      "plan": "claude-max-20x",
-      "method": "local Claude Code session logs bucketed into fixed 5h windows, priced at the list API rates above",
+      "plan": "claude-max-5x",
+      "method": "local Claude Code session logs bucketed into fixed 5h windows, priced at the list API rates above. Plan read from ~/.claude.json oauthAccount.organizationRateLimitTier, not assumed from the size of the spend.",
       "window": "5h",
       "days": 30,
       "turns": 78408,
@@ -24,7 +78,7 @@
       "usd_per_window_p90": 541,
       "usd_per_window_max": 900,
       "checked": "2026-08-20",
-      "note": "One heavy user, one month. A user who never reaches the cap measures a floor rather than a ceiling, so p90 is quoted rather than max. Reproduce with `node probe/windows.js`."
+      "note": "One heavy user, one month, on Max 5x. No rate limit event appears in the logs for this window, so this is very likely a floor rather than a ceiling: it is what one user drew, not what the plan would have allowed. p90 is quoted rather than max. Reproduce with `node probe/windows.js`."
     }
   ],
   "plans": [
@@ -35,16 +89,31 @@
       "quota": {
         "kind": "rate_window",
         "windows": [
-          { "period": "5h", "unit": "relative", "amount": 1, "relative_to": "claude-pro" },
-          { "period": "7d", "unit": "opaque", "note": "one all-model weekly cap plus a separate Sonnet-specific cap" }
+          {
+            "period": "5h",
+            "unit": "credits",
+            "amount": 550000
+          },
+          {
+            "period": "7d",
+            "unit": "credits",
+            "amount": 5000000
+          }
         ],
         "included_value_usd": null,
         "tokens_month": null,
-        "confidence": "unknown",
-        "note": "Anthropic publishes multipliers, not token counts. Only measurement resolves this."
+        "confidence": "derived",
+        "note": "Credit allowances recovered by third-party reverse engineering, not published by Anthropic. At the $7.50 per million credit peg that is $4.13 per 5h window and $37.50 per week of API-equivalent value. The advertised multiplier matches neither window exactly."
       },
-      "models": ["claude-opus-5", "claude-sonnet-5", "claude-haiku-4-5"],
-      "sources": ["https://claude.com/pricing"]
+      "models": [
+        "claude-opus-5",
+        "claude-sonnet-5",
+        "claude-haiku-4-5"
+      ],
+      "sources": [
+        "https://claude.com/pricing",
+        "https://she-llac.com/claude-limits"
+      ]
     },
     {
       "id": "claude-max-5x",
@@ -53,15 +122,31 @@
       "quota": {
         "kind": "rate_window",
         "windows": [
-          { "period": "5h", "unit": "relative", "amount": 5, "relative_to": "claude-pro" },
-          { "period": "7d", "unit": "opaque" }
+          {
+            "period": "5h",
+            "unit": "credits",
+            "amount": 3300000
+          },
+          {
+            "period": "7d",
+            "unit": "credits",
+            "amount": 41666700
+          }
         ],
         "included_value_usd": null,
         "tokens_month": null,
-        "confidence": "unknown"
+        "confidence": "derived",
+        "note": "Credit allowances recovered by third-party reverse engineering, not published by Anthropic. At the $7.50 per million credit peg that is $24.75 per 5h window and $312.50 per week of API-equivalent value. The advertised multiplier matches neither window exactly."
       },
-      "models": ["claude-opus-5", "claude-sonnet-5", "claude-haiku-4-5"],
-      "sources": ["https://claude.com/pricing"]
+      "models": [
+        "claude-opus-5",
+        "claude-sonnet-5",
+        "claude-haiku-4-5"
+      ],
+      "sources": [
+        "https://claude.com/pricing",
+        "https://she-llac.com/claude-limits"
+      ]
     },
     {
       "id": "claude-max-20x",
@@ -70,15 +155,31 @@
       "quota": {
         "kind": "rate_window",
         "windows": [
-          { "period": "5h", "unit": "relative", "amount": 20, "relative_to": "claude-pro" },
-          { "period": "7d", "unit": "opaque" }
+          {
+            "period": "5h",
+            "unit": "credits",
+            "amount": 11000000
+          },
+          {
+            "period": "7d",
+            "unit": "credits",
+            "amount": 83333300
+          }
         ],
         "included_value_usd": null,
         "tokens_month": null,
-        "confidence": "unknown"
+        "confidence": "derived",
+        "note": "Credit allowances recovered by third-party reverse engineering, not published by Anthropic. At the $7.50 per million credit peg that is $82.50 per 5h window and $625.00 per week of API-equivalent value. The advertised multiplier matches neither window exactly."
       },
-      "models": ["claude-opus-5", "claude-sonnet-5", "claude-haiku-4-5"],
-      "sources": ["https://claude.com/pricing"]
+      "models": [
+        "claude-opus-5",
+        "claude-sonnet-5",
+        "claude-haiku-4-5"
+      ],
+      "sources": [
+        "https://claude.com/pricing",
+        "https://she-llac.com/claude-limits"
+      ]
     }
   ]
 }
