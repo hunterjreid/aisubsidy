@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync, readdirSync, copyFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { loadCatalog } from "./lib/catalog.js";
@@ -14,10 +14,19 @@ if (catalog.errors.length) {
   process.exit(1);
 }
 
+// dist/ is what the Pages Function imports. public/ is the static upload root.
 mkdirSync(join(root, "dist"), { recursive: true });
-writeFileSync(join(root, "dist", "catalog.json"), JSON.stringify(catalog, null, 2));
+mkdirSync(join(root, "public"), { recursive: true });
+
+const compiled = JSON.stringify(catalog, null, 2);
+writeFileSync(join(root, "dist", "catalog.json"), compiled);
+writeFileSync(join(root, "public", "catalog.json"), compiled);
+
+for (const file of readdirSync(join(root, "web"))) {
+  copyFileSync(join(root, "web", file), join(root, "public", file));
+}
 
 const s = catalog.stats;
 console.log(`ok  ${s.providers} vendors, ${s.models} models (${s.coding_models} coding), ${s.plans} plans`);
 console.log(`    ${s.priced} models carry a first-party per-token rate, ${s.models - s.priced} do not`);
-console.log(`    dist/catalog.json`);
+console.log(`    dist/catalog.json, public/`);

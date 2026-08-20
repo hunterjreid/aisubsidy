@@ -1,7 +1,7 @@
 {
   "name": "aisubsidy",
   "version": "0.1.0",
-  "description": "How much are AI vendors subsidising your coding agent? A catalogue of OAuth coding plans and what a token actually costs on each.",
+  "description": "Every OAuth coding plan, what it costs, and what it actually gives you. Plus a probe that measures it from your own session logs.",
   "type": "module",
   "license": "MIT",
   "engines": { "node": ">=20" },
@@ -10,8 +10,9 @@
     "start": "node src/server.js",
     "dev": "node src/server.js",
     "probe": "node probe/probe.js",
-    "test": "node src/build.js"
+    "test": "node src/build.js",
+    "deploy": "node src/build.js && wrangler pages deploy public --project-name aisubsidy --commit-dirty=true"
   },
-  "files": ["src", "data", "web", "probe"],
-  "keywords": ["ai", "pricing", "claude-code", "codex", "copilot", "cursor", "oauth", "tokens"]
+  "files": ["src", "data", "web", "probe", "functions"],
+  "keywords": ["ai", "pricing", "oauth", "claude-code", "codex", "tokens", "subsidy"]
 }

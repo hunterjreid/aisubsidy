@@ -7,24 +7,24 @@
 <style>
   :root{
     --bg:#fbfaf8; --panel:#fff; --ink:#16150f; --muted:#6b6a61;
-    --line:#e6e3dc; --accent:#b8492e; --good:#2f6b4f; --warn:#8a6a1f;
+    --line:#e6e3dc; --accent:#b8492e; --good:#2f6b4f;
     --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   }
   @media (prefers-color-scheme: dark){
     :root{ --bg:#131311; --panel:#1b1a18; --ink:#eceae4; --muted:#928f86;
-           --line:#2c2a27; --accent:#e07a56; --good:#69b48d; --warn:#d0a94a; }
+           --line:#2c2a27; --accent:#e07a56; --good:#69b48d; }
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
     font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-  .wrap{max-width:1080px;margin:0 auto;padding:40px 20px 80px}
+  .wrap{max-width:1140px;margin:0 auto;padding:40px 20px 80px}
   h1{font-size:30px;margin:0 0 6px;letter-spacing:-.02em}
-  h2{font-size:15px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
-     margin:40px 0 12px;font-weight:600}
+  h2{font-size:14px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+     margin:42px 0 12px;font-weight:600}
   .tag{color:var(--accent);font-weight:600}
-  .lede{color:var(--muted);max-width:72ch;margin:0 0 26px}
+  .lede{color:var(--muted);max-width:74ch;margin:0 0 26px}
   .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
-  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 16px;min-width:118px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 16px;min-width:112px}
   .stat b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
   .stat span{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
   .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
@@ -32,196 +32,225 @@
     border-radius:8px;padding:8px 11px;font:inherit;font-size:14px}
   input{flex:1;min-width:170px}
   .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
-  table{border-collapse:collapse;width:100%;min-width:720px;font-size:14px}
-  th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+  table{border-collapse:collapse;width:100%;min-width:860px;font-size:14px}
+  th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
   th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
-    cursor:pointer;user-select:none;position:sticky;top:0;background:var(--panel);z-index:1}
+    cursor:pointer;user-select:none;position:sticky;top:0;background:var(--panel);z-index:1;white-space:nowrap}
   th:hover{color:var(--ink)}
   th.sorted::after{content:" \25be";color:var(--accent)}
   th.sorted.asc::after{content:" \25b4"}
   tbody tr:last-child td{border-bottom:0}
   tbody tr:hover{background:color-mix(in srgb, var(--accent) 6%, transparent)}
-  .model{display:flex;align-items:center;gap:11px}
-  .model svg{width:24px;height:24px;flex:none;display:block}
-  .model .n{font-weight:600}
-  .model .v{display:block;color:var(--muted);font-size:12px;font-weight:400}
-  .num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono)}
-  .blend{font-weight:700}
+  .who{display:flex;align-items:center;gap:11px;white-space:nowrap}
+  .who svg{width:24px;height:24px;flex:none;display:block}
+  .who .n{font-weight:600}
+  .who .v{display:block;color:var(--muted);font-size:12px;font-weight:400}
+  .num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);white-space:nowrap}
+  .price{font-weight:700;font-size:15px}
+  .gets{white-space:normal;min-width:230px;line-height:1.4}
+  .gets .cap{display:block}
+  .gets .unk{color:var(--muted);font-style:italic}
+  .models{white-space:normal;min-width:170px;color:var(--muted);font-size:13px}
   .dash{color:var(--muted)}
   .pill{font-size:10.5px;padding:2px 7px;border-radius:99px;border:1px solid var(--line);
-    color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
-  .pill.code{color:var(--good);border-color:color-mix(in srgb,var(--good) 40%,transparent)}
-  .note{color:var(--muted);font-size:13px;margin-top:10px;white-space:normal;max-width:74ch}
-  details{margin-top:32px;border-top:1px solid var(--line);padding-top:18px}
+    color:var(--muted);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+  .pill.published{color:var(--good);border-color:color-mix(in srgb,var(--good) 40%,transparent)}
+  .note{color:var(--muted);font-size:13px;margin-top:10px;white-space:normal;max-width:76ch}
+  details{margin-top:30px;border-top:1px solid var(--line);padding-top:18px}
   summary{cursor:pointer;font-weight:600}
   code{font-family:var(--mono);font-size:13px;background:color-mix(in srgb,var(--ink) 7%,transparent);
     padding:1px 5px;border-radius:4px}
   pre{background:var(--panel);border:1px solid var(--line);border-radius:10px;
     padding:14px;overflow-x:auto;font-family:var(--mono);font-size:13px}
-  footer{margin-top:38px;color:var(--muted);font-size:13px;max-width:74ch}
+  footer{margin-top:38px;color:var(--muted);font-size:13px;max-width:76ch}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>ai<span class="tag">subsidy</span></h1>
   <p class="lede">
-    Every vendor that ships both its own model and its own coding agent, and
-    what a token costs on each. Harnesses over other people's models are not
-    listed: if the vendor does not train the model, there is no subsidy of
-    theirs to measure.
+    Every OAuth coding plan you can log a CLI into, what it costs, and what it
+    actually gives you. Only vendors that train their own model are listed.
+    Harnesses reselling somebody else's tokens are not a subsidy.
   </p>
 
   <div class="stats" id="stats"></div>
 
   <div class="bar">
-    <input id="q" placeholder="Filter by model or vendor" autocomplete="off">
-    <select id="only">
-      <option value="code">Coding models only</option>
-      <option value="">All models</option>
+    <input id="q" placeholder="Filter by vendor, agent or plan" autocomplete="off">
+    <select id="sortsel">
+      <option value="price_usd_month">Sort by price</option>
+      <option value="provider_name">Sort by vendor</option>
+      <option value="quota.confidence">Sort by basis</option>
     </select>
   </div>
 
   <div class="scroll">
     <table>
       <thead><tr>
-        <th data-k="name">Model</th>
-        <th data-k="usd_in_mtok" class="num">$/Mtok in</th>
-        <th data-k="usd_out_mtok" class="num">$/Mtok out</th>
-        <th data-k="blended_usd_mtok" class="num">Blended</th>
-        <th data-k="product">Agent</th>
+        <th data-k="provider_name">Vendor</th>
+        <th data-k="name">Plan</th>
+        <th data-k="price_usd_month" class="num">$/mo</th>
+        <th>What you get</th>
+        <th>Models</th>
+        <th data-k="quota.confidence">Basis</th>
       </tr></thead>
       <tbody id="rows"></tbody>
     </table>
   </div>
   <p class="note" id="empty" hidden>Nothing matches that filter.</p>
   <p class="note">
-    <b>Blended</b> weights input three to one against output, because a coding
-    agent reads far more than it writes. A blank cell means no first-party rate
-    was found and nothing was invented to fill it.
+    Not one of these publishes a token count. That is the whole problem: you can
+    read every pricing page end to end and still not know what a dollar buys.
+    Run the probe below and it tells you.
   </p>
 
-  <h2>Plans behind those models</h2>
+  <h2>What a token costs on the open API</h2>
   <div class="scroll">
     <table>
       <thead><tr>
-        <th data-p="provider_name">Vendor</th>
-        <th data-p="name">Plan</th>
-        <th data-p="price_usd_month" class="num">$/mo</th>
-        <th data-p="quota.kind">Quota</th>
-        <th data-p="quota.confidence">Basis</th>
+        <th>Model</th>
+        <th class="num">$/Mtok in</th>
+        <th class="num">$/Mtok out</th>
+        <th class="num">Blended</th>
       </tr></thead>
-      <tbody id="planrows"></tbody>
+      <tbody id="modelrows"></tbody>
     </table>
   </div>
   <p class="note">
-    Every one of these is opaque: the vendor publishes a price and a multiplier
-    or a message cap and never the token count in between. That gap is the
-    reason the probe exists.
+    This is the denominator. Blended weights input three to one against output,
+    because a coding agent reads far more than it writes. A blank cell means no
+    first-party rate was found and nothing was invented to fill it.
   </p>
 
   <details open>
-    <summary>Measure what you actually get</summary>
+    <summary>Measure what your plan actually gives you</summary>
 <pre>node probe/probe.js --days 30 --plan claude-max-20x</pre>
     <p class="note">
       Reads the token counts Claude Code and Codex already write to
       <code>~/.claude/projects</code> and <code>~/.codex/sessions</code>, prices
-      each model at its vendor's own list rate from the table above, and divides
-      by what you pay. Nothing leaves your machine unless you pass
+      each model at its vendor's own rate from the table above, and divides by
+      what you pay. Nothing leaves your machine unless you pass
       <code>--submit</code>.
     </p>
   </details>
 
   <footer>
     Data is one JSON file per vendor in <code>data/providers/</code>, each plan
-    carrying a source URL and a checked date. Logos are inline SVG: geometric
-    marks are reproduced, the rest are monogram badges rather than freehand
-    traces of a trademark. Corrections by pull request.
+    carrying a source URL and a checked date. Logos are inline SVG with no
+    external requests. Corrections by pull request.
   </footer>
 </div>
 
 <script type="module">
 import { logoFor } from "./logos.js";
 
-const get = (o, path) => path.split(".").reduce((a, k) => (a == null ? a : a[k]), o);
+const get = (o, p) => p.split(".").reduce((a, k) => (a == null ? a : a[k]), o);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const money = (n) => n == null ? '<span class="dash">–</span>' : "$" + n.toFixed(2);
 
-let MODELS = [], PLANS = [];
-let sortKey = "blended_usd_mtok", sortAsc = true;
+let PLANS = [], MODELS = [], BY_ID = new Map();
+let sortKey = "price_usd_month", sortAsc = true;
 
-// Nulls always sink, whichever direction the column is sorted.
 const cmpBy = (key, asc) => (a, b) => {
   const x = get(a, key), y = get(b, key);
   if (x == null && y == null) return 0;
-  if (x == null) return 1;
+  if (x == null) return 1;          // nulls sink either direction
   if (y == null) return -1;
   const c = typeof x === "number" ? x - y : String(x).localeCompare(String(y));
   return asc ? c : -c;
 };
 
-function renderModels() {
-  const q = document.getElementById("q").value.trim().toLowerCase();
-  const only = document.getElementById("only").value;
+// Turn the quota windows into a sentence. An opaque window says so out loud
+// rather than rendering as an empty cell that reads like an oversight.
+const PERIOD = { "5h": "per 5h", "7d": "per week", "30d": "per month" };
+function whatYouGet(plan) {
+  const q = plan.quota || {};
+  if (q.kind === "byok") return '<span class="unk">nothing bundled, the model bills separately</span>';
 
-  const rows = MODELS.filter((m) => {
-    if (only === "code" && !m.coding) return false;
-    if (!q) return true;
-    return `${m.name} ${m.provider_name} ${m.id} ${m.product}`.toLowerCase().includes(q);
-  }).sort(cmpBy(sortKey, sortAsc));
+  const parts = (q.windows || []).map((w) => {
+    const per = PERIOD[w.period] || ("per " + w.period);
+    if (w.unit === "opaque") return `<span class="unk">${per}: cap not published</span>`;
+    if (w.unit === "relative") {
+      const base = BY_ID.get(w.relative_to);
+      const of = base ? ` of ${esc(base.name)}` : "";
+      return w.amount === 1 ? `baseline ${per}` : `${w.amount}x${of} ${per}`;
+    }
+    if (w.amount == null) return `<span class="unk">${esc(w.unit)} ${per}: amount not published</span>`;
+    return `${w.amount.toLocaleString("en-US")} ${esc(w.unit)} ${per}`;
+  });
+
+  if (!parts.length) return '<span class="unk">no quota published</span>';
+  return parts.map((p) => `<span class="cap">${p}</span>`).join("");
+}
+
+function renderPlans() {
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  const rows = PLANS.filter((p) =>
+    !q || `${p.provider_name} ${p.product} ${p.name} ${p.id}`.toLowerCase().includes(q)
+  ).sort(cmpBy(sortKey, sortAsc));
 
   document.getElementById("empty").hidden = rows.length > 0;
-  document.getElementById("rows").innerHTML = rows.map((m) => `<tr>
-      <td>
-        <div class="model">
-          ${logoFor(m.provider)}
-          <span><span class="n">${esc(m.name)}</span>
-          <span class="v">${esc(m.provider_name)}</span></span>
-        </div>
-      </td>
-      <td class="num">${money(m.usd_in_mtok)}</td>
-      <td class="num">${money(m.usd_out_mtok)}</td>
-      <td class="num blend">${money(m.blended_usd_mtok)}</td>
-      <td>${esc(m.product)}${m.coding ? ' <span class="pill code">code</span>' : ""}</td>
-    </tr>`).join("");
+  document.getElementById("rows").innerHTML = rows.map((p) => {
+    const names = (p.models || [])
+      .map((id) => MODELS.find((m) => m.id === id)?.name || id);
+    return `<tr>
+      <td><div class="who">${logoFor(p.provider)}
+        <span><span class="n">${esc(p.provider_name)}</span>
+        <span class="v">${esc(p.product)}</span></span></div></td>
+      <td>${esc(p.name)}</td>
+      <td class="num price">${p.price_usd_month == null
+        ? '<span class="dash">?</span>' : money(p.price_usd_month)}</td>
+      <td class="gets">${whatYouGet(p)}</td>
+      <td class="models">${names.length ? esc(names.join(", ")) : '<span class="dash">–</span>'}</td>
+      <td><span class="pill ${p.quota.confidence}">${esc(p.quota.confidence)}</span></td>
+    </tr>`;
+  }).join("");
 
   document.querySelectorAll("th[data-k]").forEach((th) => {
     th.classList.toggle("sorted", th.dataset.k === sortKey);
     th.classList.toggle("asc", th.dataset.k === sortKey && sortAsc);
   });
+  document.getElementById("sortsel").value = sortKey;
 }
 
-function renderPlans() {
-  document.getElementById("planrows").innerHTML = PLANS
-    .slice().sort(cmpBy("price_usd_month", true))
-    .map((p) => `<tr>
-      <td><div class="model">${logoFor(p.provider)}<span>${esc(p.provider_name)}</span></div></td>
-      <td>${esc(p.name)}</td>
-      <td class="num">${p.price_usd_month == null ? '<span class="dash">?</span>' : money(p.price_usd_month)}</td>
-      <td>${esc(p.quota.kind.replace(/_/g, " "))}</td>
-      <td><span class="pill">${esc(p.quota.confidence)}</span></td>
+function renderModels() {
+  document.getElementById("modelrows").innerHTML = MODELS
+    .filter((m) => m.coding)
+    .slice().sort(cmpBy("blended_usd_mtok", true))
+    .map((m) => `<tr>
+      <td><div class="who">${logoFor(m.provider)}
+        <span><span class="n">${esc(m.name)}</span>
+        <span class="v">${esc(m.provider_name)}</span></span></div></td>
+      <td class="num">${money(m.usd_in_mtok)}</td>
+      <td class="num">${money(m.usd_out_mtok)}</td>
+      <td class="num price">${money(m.blended_usd_mtok)}</td>
     </tr>`).join("");
 }
 
 document.querySelectorAll("th[data-k]").forEach((th) => th.addEventListener("click", () => {
   if (sortKey === th.dataset.k) sortAsc = !sortAsc;
   else { sortKey = th.dataset.k; sortAsc = true; }
-  renderModels();
+  renderPlans();
 }));
-["q", "only"].forEach((id) =>
-  document.getElementById(id).addEventListener("input", renderModels));
+document.getElementById("sortsel").addEventListener("change", (e) => {
+  sortKey = e.target.value; sortAsc = true; renderPlans();
+});
+document.getElementById("q").addEventListener("input", renderPlans);
 
 fetch("/api/catalog").then((r) => r.json()).then((c) => {
-  MODELS = c.models;
   PLANS = c.plans;
+  MODELS = c.models;
+  BY_ID = new Map(PLANS.map((p) => [p.id, p]));
   document.getElementById("stats").innerHTML = [
     [c.stats.providers, "vendors"],
-    [c.stats.models, "models"],
+    [c.stats.plans, "oauth plans"],
     [c.stats.coding_models, "coding models"],
-    [c.stats.plans, "plans"]
+    [c.plans.filter((p) => p.quota.confidence === "unknown").length, "with no published cap"]
   ].map(([n, l]) => `<div class="stat"><b>${n}</b><span>${l}</span></div>`).join("");
-  renderModels();
   renderPlans();
+  renderModels();
 });
 </script>
 </body>
