@@ -1,0 +1,21 @@
+name = "aisubsidy"
+pages_build_output_dir = "public"
+compatibility_date = "2026-08-20"
+
+# Two stores, deliberately.
+#
+# R2 is the source of truth: every submission is written once as an immutable
+# object and never mutated. Object storage has no row ceiling, so the archive
+# grows without a migration ever being needed.
+#
+# D1 is a rebuildable index over that archive. It exists to answer queries fast,
+# not to hold anything R2 does not already have. If it were lost it could be
+# replayed from the bucket, which is why it is safe to keep it small.
+[[r2_buckets]]
+binding = "ARCHIVE"
+bucket_name = "aisubsidy-measurements"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "aisubsidy"
+database_id = "d818a658-3b8a-4c9b-acc9-9896ad17b402"

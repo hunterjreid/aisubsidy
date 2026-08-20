@@ -139,6 +139,9 @@
   .max small{display:block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
     color:var(--muted);font-weight:400;margin-top:3px}
   .none{color:var(--muted);font-family:var(--mono);font-size:13px;text-align:right;font-style:italic}
+  .go{text-align:right;font-family:var(--mono);font-size:12.5px}
+  .go a{color:var(--muted);text-decoration:none;white-space:nowrap}
+  .go a:hover{color:var(--accent);text-decoration:underline}
 
   .note{color:var(--muted);font-size:13.5px;margin-top:14px;max-width:76ch}
   .note b{color:var(--ink);font-weight:600}
@@ -161,10 +164,10 @@
       <p class="sub">What each subscription costs, and the most it could possibly hand you at the vendor's own API rates.</p>
     </div>
     <div class="cards">
-      <a class="cardlink" href="#measure">
+      <a class="cardlink" href="/skill.md">
         <div><div class="kicker">Measure</div>
-          <div class="t">Your own subsidy</div>
-          <div class="d">Price what you actually burned against what you pay, from your local session logs</div></div>
+          <div class="t">Your own subsidy, in one skill</div>
+          <div class="d">Drop it in and ask your agent. Reads your local logs, sends nothing without a yes</div></div>
         <div class="arrow">&#8599;</div>
       </a>
       <a class="cardlink" href="/api/catalog">
@@ -173,10 +176,10 @@
           <div class="d">Every vendor, plan and model, with a source URL and a checked date on each</div></div>
         <div class="arrow">&#8599;</div>
       </a>
-      <a class="cardlink" href="https://github.com/hunterjreid/aisubsidy">
-        <div><div class="kicker">Source</div>
-          <div class="t">Contribute a correction</div>
-          <div class="d">One JSON file per vendor. A number needs a first-party source or it stays null</div></div>
+      <a class="cardlink" href="/contribute">
+        <div><div class="kicker">Contribute</div>
+          <div class="t">Measure a plan, or fix a number</div>
+          <div class="d">Run the drop-in skill, or edit one JSON file. A number needs a first-party source or it stays null</div></div>
         <div class="arrow">&#8599;</div>
       </a>
     </div>
@@ -232,6 +235,7 @@
         <th>5h limit</th>
         <th>Weekly limit</th>
         <th data-k="derived.max_spend_usd_month" class="r">Max possible spend (approx.)</th>
+        <th class="r">Sign up</th>
       </tr></thead>
       <tbody id="rows"></tbody>
     </table>
@@ -282,6 +286,8 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const usd = (n) => "$" + Math.round(n).toLocaleString("en-US");
 const slug = (s) => String(s).replace(/[^a-z0-9.-]/gi, "-");
+// The bare host reads as a destination. A full URL in a table cell is noise.
+const host = (u) => { try { return new URL(u).host.replace(/^www\./, ""); } catch { return "link"; } };
 
 let PLANS = [], MODELS = [];
 let sortKey = "price_usd_month", sortAsc = true;
@@ -344,6 +350,10 @@ function rowFor(p) {
     ${limitCell(p, ["5h"])}
     ${limitCell(p, ["7d", "30d"])}
     ${max}
+    <td class="go">${p.sources?.[0]
+      ? `<a href="${esc(p.sources[0])}" target="_blank" rel="noopener nofollow"
+           title="${esc(p.sources[0])}">${esc(host(p.sources[0]))} &#8599;</a>`
+      : '<span class="none">no link</span>'}</td>
   </tr>`;
 }
 
@@ -379,11 +389,11 @@ function renderPlans() {
 
   const html = [];
   for (const { list } of ordered) {
-    html.push(`<tr class="group"><td colspan="5">${esc(list[0].provider_name)} / ${esc(list[0].product)}</td></tr>`);
+    html.push(`<tr class="group"><td colspan="6">${esc(list[0].provider_name)} / ${esc(list[0].product)}</td></tr>`);
     for (const p of list) html.push(rowFor(p));
   }
   document.getElementById("rows").innerHTML =
-    html.join("") || '<tr><td colspan="5" class="none">Nothing matches that filter.</td></tr>';
+    html.join("") || '<tr><td colspan="6" class="none">Nothing matches that filter.</td></tr>';
 
   const measured = PLANS.filter((p) => p.derived?.max_spend_usd_month != null).length;
   document.getElementById("summary").innerHTML =

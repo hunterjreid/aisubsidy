@@ -99,6 +99,7 @@ function readClaudeCode() {
   const dir = join(homedir(), ".claude", "projects");
   const byModel = new Map();
   let sessions = 0;
+  let turns = 0;
 
   for (const file of walk(dir, 2)) {
     if (!recent(file)) continue;
@@ -121,10 +122,11 @@ function readClaudeCode() {
         output: u.output_tokens || 0
       });
       counted = true;
+      turns++;
     }
     if (counted) sessions++;
   }
-  return { agent: "claude-code", sessions, byModel };
+  return { agent: "claude-code", sessions, turns, byModel };
 }
 
 function readCodex() {
@@ -157,7 +159,9 @@ function readCodex() {
     });
     sessions++;
   }
-  return { agent: "codex", sessions, byModel };
+  // Codex logs a cumulative total per session rather than per turn, so a
+  // session is the finest unit this file can honestly report.
+  return { agent: "codex", sessions, turns: sessions, byModel };
 }
 
 // ---- report -----------------------------------------------------------
@@ -186,6 +190,7 @@ function summarise(source) {
   return {
     agent: source.agent,
     sessions: source.sessions,
+    turns: source.turns ?? source.sessions,
     tokens: totals,
     total_tokens: total,
     api_value_usd: Number(apiValue.toFixed(2)),
@@ -234,12 +239,16 @@ if (SUBMIT_TO && typeof SUBMIT_TO === "string") {
   const anon = {
     schema: "aisubsidy/measurement/1",
     window_days: DAYS,
+    probe_version: "probe-1",
+    usd_total: report.total_api_value_usd,
     agents: report.agents.map((a) => ({
       agent: a.agent,
       sessions: a.sessions,
+      turns: a.turns,
       models: a.models.map((m) => ({ model: m.model, tokens: m.tokens }))
     })),
-    plan_id: PLAN_ID || null
+    plan_id: PLAN_ID || null,
+    hit_cap: "unsure"
   };
   writeFileSync(SUBMIT_TO, JSON.stringify(anon, null, 2));
   console.log(`wrote anonymised measurement to ${SUBMIT_TO}`);

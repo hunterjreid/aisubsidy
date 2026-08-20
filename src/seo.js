@@ -5,7 +5,7 @@
 // should find the price, the quota, the ceiling and the sources, not a shell
 // that needs JavaScript to say anything.
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync, readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 export const SITE = "https://aisubsidy.pages.dev";
@@ -226,6 +226,138 @@ ${plans.map((p) => `<tr><td><a href="/plan/${slug(p.id)}">${esc(p.provider_name)
   return page({ path: `/model/${slug(model.id)}`, title: `${title} API pricing`, description, body, jsonld });
 }
 
+function contributePage(catalog) {
+  const unmeasured = catalog.plans.filter((p) => p.derived?.max_spend_usd_month == null);
+  const description =
+    "How to add a vendor, correct a number, or submit a measurement to aisubsidy. " +
+    "Every figure needs a first-party source or it stays null.";
+
+  const body = `
+<h1>How to contribute</h1>
+<p class="sub">Two ways in: fix the catalogue, or measure a plan nobody has measured.</p>
+
+<p>Everything here lives in one JSON file per vendor at
+<code>data/providers/</code>. Edit a file, run the build, open a pull request.
+The build fails on anything malformed, so a green check means the shape is
+right. It cannot tell whether the number is true, which is what review is for.</p>
+
+<h2>The bar for a number</h2>
+<p><strong>Every plan needs a first-party source URL.</strong> A vendor pricing
+page, vendor docs, or a vendor changelog. Not a comparison blog, not an SEO
+aggregator, not a YouTube description. Third-party figures for AI pricing
+contradict each other constantly and a good number of them are generated.</p>
+
+<p><strong>If you cannot source it, leave it null.</strong> A blank cell is a
+correct statement that nobody knows. A number copied off a listicle is a wrong
+statement that looks authoritative, and it will get quoted back at people.
+Google AI Ultra sat here with a null price for exactly this reason before the
+vendor was dropped.</p>
+
+<p><strong>If sources conflict, record it in <code>note</code></strong> rather
+than picking a winner. There are live contradictions in GLM Pro and Max pricing
+and in Kimi's dollar tiers, and the notes say so.</p>
+
+<p><strong>Update <code>checked</code> when you verify.</strong> It is the date
+somebody actually looked, not the date the file changed.</p>
+
+<h2>Measuring a plan</h2>
+<p>This is the valuable one. ${unmeasured.length} of ${catalog.plans.length}
+plans have no ceiling anybody can put a number on, because the vendor publishes
+a price and a multiplier and nothing else. The only way through is measurement.</p>
+
+<h3>The easy way: run the skill</h3>
+<p>Drop <a href="/skill.md">skill.md</a> into <code>.claude/skills/aisubsidy-measure/SKILL.md</code>
+and ask your agent to measure your plan. It reads your local logs, prices them,
+shows you the result, asks which plan you are on and whether you hit the cap,
+then shows you the exact JSON and waits for a yes before sending anything.</p>
+
+<pre>curl -o ~/.claude/skills/aisubsidy-measure/SKILL.md \\
+  --create-dirs ${SITE}/skill.md</pre>
+
+<h3>The manual way</h3>
+<pre>git clone https://github.com/hunterjreid/aisubsidy
+cd aisubsidy
+node probe/windows.js --days 30
+node probe/probe.js --days 30 --plan &lt;plan-id&gt; --submit measurement.json
+curl -X POST ${SITE}/api/submit -H 'content-type: application/json' \\
+  --data @measurement.json</pre>
+
+<p>Both read the token counts Claude Code and Codex already write to
+<code>~/.claude/projects</code> and <code>~/.codex/sessions</code>. Nothing
+leaves your machine unless you pass <code>--submit</code>, and the file that
+writes contains model names and token counts only: no paths, no project names,
+no prompts. Open it before you attach it anyway.</p>
+
+<p>Attach it to an issue titled <code>measurement: &lt;plan-id&gt;</code>. A
+useful measurement says how the plan was used: one model or several,
+interactive or long autonomous runs, and <strong>whether you actually hit the
+cap</strong>. Somebody who never reaches the limit measures a floor, not a
+ceiling, and a plan measured only by light users reads as worse value than it
+is. A figure moves into the catalogue once several independent measurements
+agree, because one person's month is a sample of one.</p>
+
+<h2>Which vendors belong here</h2>
+<p>A vendor qualifies only if it ships <strong>both its own model and its own
+coding agent</strong>. An API key is not a plan. A reseller is not first party.</p>
+<p>Harnesses are out on purpose. Cursor and GitHub Copilot are good products and
+neither trains the model you are billed for, so their credit pools measure a
+retail markup rather than a subsidy. Both were built here and then removed.</p>
+
+<h2>Plan shape</h2>
+<pre>{
+  "id": "kebab-case-globally-unique",
+  "name": "Human name",
+  "price_usd_month": 20,
+  "quota": {
+    "kind": "credit_pool | rate_window | request_count | token_pool | byok",
+    "windows": [{ "period": "5h", "unit": "prompts", "amount": 80 }],
+    "included_value_usd": null,
+    "tokens_month": null,
+    "confidence": "published | derived | measured | unknown",
+    "note": "anything the fields cannot carry"
+  },
+  "models": ["model-id"],
+  "sources": ["https://vendor.example/pricing"]
+}</pre>
+
+<p>Pick <code>kind</code> by what the vendor actually meters: a dollar balance
+is <code>credit_pool</code>, an opaque cap per rolling window is
+<code>rate_window</code>, countable prompts or calls are
+<code>request_count</code>, an explicit token allowance is
+<code>token_pool</code>, and a free tool that bills through the API is
+<code>byok</code>. Setting a dollar figure while leaving confidence
+<code>unknown</code> is rejected by the build, because an unsourceable dollar
+figure is the exact thing this project exists to avoid.</p>
+
+<h2>House rules</h2>
+<ul>
+  <li>Docs state what is true now. Git holds the history.</li>
+  <li>No em dashes anywhere, in code, docs or commits.</li>
+  <li>If something can be removed, remove it. There is no database: the
+  catalogue is JSON files and the build compiles them.</li>
+</ul>
+
+<p class="sub"><a href="https://github.com/hunterjreid/aisubsidy">Repository</a>
+&middot; <a href="https://github.com/hunterjreid/aisubsidy/issues/new">Open an issue</a>
+&middot; MIT licensed</p>`;
+
+  const jsonld = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "How to contribute to aisubsidy",
+    description,
+    url: `${SITE}/contribute`,
+    step: [
+      { "@type": "HowToStep", name: "Fork and edit", text: "Edit one JSON file per vendor in data/providers/." },
+      { "@type": "HowToStep", name: "Source every number", text: "Each figure needs a first-party vendor URL, or it stays null." },
+      { "@type": "HowToStep", name: "Measure a plan", text: "Run probe/windows.js and probe/probe.js against your own session logs and attach the anonymised result." },
+      { "@type": "HowToStep", name: "Open a pull request", text: "The build validates shape on every pull request." }
+    ]
+  };
+
+  return page({ path: "/contribute", title: "How to contribute", description, body, jsonld });
+}
+
 // llms.txt, per the llmstxt.org convention: a short orientation file that tells
 // a model what is here and where the real data lives.
 function llmsTxt(catalog) {
@@ -250,6 +382,10 @@ function llmsTxt(catalog) {
     `- [Plans JSON](${SITE}/api/plans): all ${catalog.plans.length} OAuth plans`,
     `- [Models JSON](${SITE}/api/models): all ${catalog.models.length} models with per-token rates`,
     `- [Full text dump](${SITE}/llms-full.txt): the whole catalogue as plain prose`,
+    `- [How to contribute](${SITE}/contribute): the sourcing bar, the plan shape, and how to submit a measurement`,
+    `- [Measurement skill](${SITE}/skill.md): a drop-in agent skill that measures a plan and submits the result`,
+    `- [Submit endpoint](${SITE}/api/submit): POST a measurement, GET the schema`,
+    `- [Measurements](${SITE}/api/measurements?group=plan): what has been submitted so far`,
     `- [Source repository](https://github.com/hunterjreid/aisubsidy): MIT, corrections by pull request`,
     "",
     "## Plans",
@@ -327,6 +463,7 @@ function llmsFullTxt(catalog, byId) {
 function sitemap(catalog) {
   const urls = [
     { loc: SITE + "/", priority: "1.0", freq: "weekly" },
+    { loc: SITE + "/contribute", priority: "0.9", freq: "monthly" },
     ...catalog.plans.map((p) => ({ loc: `${SITE}/plan/${slug(p.id)}`, priority: "0.8", freq: "weekly", lastmod: p.checked })),
     ...catalog.models.map((m) => ({ loc: `${SITE}/model/${slug(m.id)}`, priority: "0.7", freq: "weekly", lastmod: m.checked }))
   ];
@@ -400,6 +537,14 @@ export function writeSeo(root, catalog) {
     writeFileSync(join(pub, "model", `${slug(model.id)}.html`), modelPage(model, catalog));
     count++;
   }
+
+  writeFileSync(join(pub, "contribute.html"), contributePage(catalog));
+  count++;
+
+  // The contributor skill is served as a file so somebody can drop it straight
+  // into .claude/skills/ without cloning anything.
+  const skill = join(root, "skills", "aisubsidy-measure", "SKILL.md");
+  if (existsSync(skill)) writeFileSync(join(pub, "skill.md"), readFileSync(skill));
 
   writeFileSync(join(pub, "robots.txt"), ROBOTS);
   writeFileSync(join(pub, "sitemap.xml"), sitemap(catalog));
