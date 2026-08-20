@@ -23,10 +23,6 @@
      margin:42px 0 12px;font-weight:600}
   .tag{color:var(--accent);font-weight:600}
   .lede{color:var(--muted);max-width:74ch;margin:0 0 26px}
-  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
-  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 16px;min-width:112px}
-  .stat b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
-  .stat span{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
   .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
   input,select{background:var(--panel);color:var(--ink);border:1px solid var(--line);
     border-radius:8px;padding:8px 11px;font:inherit;font-size:14px}
@@ -73,8 +69,6 @@
     actually gives you. Only vendors that train their own model are listed.
     Harnesses reselling somebody else's tokens are not a subsidy.
   </p>
-
-  <div class="stats" id="stats"></div>
 
   <div class="bar">
     <input id="q" placeholder="Filter by vendor, agent or plan" autocomplete="off">
@@ -243,12 +237,6 @@ fetch("/api/catalog").then((r) => r.json()).then((c) => {
   PLANS = c.plans;
   MODELS = c.models;
   BY_ID = new Map(PLANS.map((p) => [p.id, p]));
-  document.getElementById("stats").innerHTML = [
-    [c.stats.providers, "vendors"],
-    [c.stats.plans, "oauth plans"],
-    [c.stats.coding_models, "coding models"],
-    [c.plans.filter((p) => p.quota.confidence === "unknown").length, "with no published cap"]
-  ].map(([n, l]) => `<div class="stat"><b>${n}</b><span>${l}</span></div>`).join("");
   renderPlans();
   renderModels();
 });
