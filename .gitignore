@@ -6,3 +6,6 @@ public/
 .DS_Store
 measurement*.json
 m.json
+skill-run.mjs
+skill-out.json
+skill-err.txt

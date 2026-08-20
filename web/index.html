@@ -83,7 +83,7 @@
      longest name at 45 degrees, so nothing collides with the bars above. */
   .legend{display:flex;gap:clamp(6px,1.3vw,18px);height:128px;align-items:flex-start}
   .lg{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;padding-top:12px}
-  .lg svg{width:19px;height:19px;display:block;flex:none}
+  .lg svg{width:19px;height:19px;display:block;flex:none;color:var(--ink)}
   .lg .lab{height:96px;width:100%;display:flex;justify-content:center;align-items:flex-start;
     margin-top:12px}
   .lg span{font-size:11.5px;color:var(--muted);white-space:nowrap;line-height:1.2;
@@ -94,26 +94,37 @@
   input{flex:1;min-width:180px;background:var(--panel);color:var(--ink);
     border:1px solid var(--line);border-radius:8px;padding:9px 12px;font:inherit;font-size:14px}
   .card{border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow-x:auto}
-  table{border-collapse:collapse;width:100%;min-width:640px}
-  thead th{font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.13em;
-    text-transform:uppercase;color:var(--muted);padding:18px 26px;text-align:left;
+  /* A default scrollbar sits like a light grey slab across a dark card. If the
+     table has to scroll on a narrow screen, it should do it quietly. */
+  .card::-webkit-scrollbar{height:8px}
+  .card::-webkit-scrollbar-track{background:transparent}
+  .card::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+  .card::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+  .card{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+  table{border-collapse:collapse;width:100%;min-width:600px}
+  thead th{font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--muted);padding:16px 14px;text-align:left;
     border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none}
+  thead th:first-child,tbody td:first-child{padding-left:22px}
+  thead th:last-child,tbody td:last-child{padding-right:22px}
   thead th:hover{color:var(--ink)}
   thead th.r{text-align:right}
   thead th.sorted{color:var(--ink)}
   thead th.sorted::after{content:" \25be"}
   thead th.sorted.asc::after{content:" \25b4"}
-  tr.group td{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--muted);padding:16px 26px 9px;
+  tr.group td{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);padding:15px 22px 8px;
     border-bottom:1px solid var(--line)}
-  tbody td{padding:17px 26px;border-bottom:1px solid var(--line);background:var(--row);
+  tbody td{padding:14px;border-bottom:1px solid var(--line);background:var(--row);
     white-space:nowrap;vertical-align:middle}
   tbody tr:last-child td{border-bottom:0}
   tbody tr.plan:hover td{background:color-mix(in srgb, var(--accent) 7%, var(--row))}
   .id{font-family:var(--mono);font-size:15px;display:flex;align-items:center;gap:13px}
   .id a{text-decoration:none}
   .id a:hover{text-decoration:underline}
-  .id svg{width:20px;height:20px;flex:none;display:block}
+  /* Monochrome marks inherit currentColor, so they need ink here rather than
+     the muted colour the surrounding label uses. */
+  .id svg{width:19px;height:19px;flex:none;display:block;color:var(--ink)}
   .lim{font-family:var(--mono);font-size:13px}
   .lim.unk{color:var(--muted);font-style:italic}
   .lim.val{color:var(--ink)}
@@ -234,7 +245,7 @@
         <th data-k="price_usd_month" class="r">Plan price</th>
         <th>5h limit</th>
         <th>Weekly limit</th>
-        <th data-k="derived.max_spend_usd_month" class="r">Max possible spend (approx.)</th>
+        <th data-k="derived.max_spend_usd_month" class="r">Max spend</th>
         <th class="r">Sign up</th>
       </tr></thead>
       <tbody id="rows"></tbody>
