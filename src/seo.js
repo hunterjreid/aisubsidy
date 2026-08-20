@@ -53,6 +53,12 @@ body{margin:0;background:var(--bg);color:var(--ink);
 .wrap{max-width:760px;margin:0 auto;padding:36px 20px 72px}
 a{color:var(--accent)}
 nav{font-family:var(--mono);font-size:13px;margin-bottom:28px;color:var(--muted)}
+nav.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.btns{display:flex;gap:8px}
+.btn{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;padding:7px 13px;
+ border-radius:9px;border:1px solid var(--line);text-decoration:none;color:var(--ink);white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
 h1{font-size:28px;margin:0 0 4px;letter-spacing:-.02em}
 h2{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);
  margin:34px 0 10px;font-weight:600;font-family:var(--mono)}
@@ -99,7 +105,9 @@ function page({ path, title, description, body, jsonld }) {
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
 </head>
 <body><div class="wrap">
-<nav><a href="/">aisubsidy</a> / ${esc(title)}</nav>
+<nav class="bar"><span><a href="/">aisubsidy</a> / ${esc(title)}</span>
+  <span class="btns"><a class="btn" href="/contribute">Contribute</a>
+  <a class="btn primary" href="https://buy.stripe.com/aFa8wO2PzaDKf7c0y8d7q00" rel="noopener">Donate</a></span></nav>
 ${body}
 <footer>
   Part of <a href="/">aisubsidy</a>, an open catalogue of AI coding subscription

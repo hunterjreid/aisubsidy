@@ -45,9 +45,21 @@
   .wrap{max-width:1140px;margin:0 auto;padding:34px 22px 80px}
   a{color:inherit}
 
+  /* Top bar */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .brand{font-size:19px;font-weight:600;text-decoration:none;letter-spacing:-.01em;
+    padding-bottom:14px}
+  .btns{display:flex;gap:9px;padding-bottom:14px}
+  .btn{font-size:14px;padding:8px 15px;border-radius:9px;border:1px solid var(--line);
+    text-decoration:none;color:var(--ink);white-space:nowrap;line-height:1.2}
+  .btn:hover{border-color:var(--muted)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  .btn.primary:hover{filter:brightness(1.08)}
+
   /* Hero */
   .hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
-    gap:56px;align-items:start;padding:26px 0 54px}
+    gap:56px;align-items:start;padding:34px 0 54px}
   @media (max-width:860px){ .hero{grid-template-columns:1fr;gap:32px;padding-bottom:36px} }
   .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(38px,5.4vw,62px);
     line-height:1.04;letter-spacing:-.02em;margin:0 0 20px}
@@ -169,9 +181,18 @@
 <body>
 <div class="wrap">
 
+  <nav class="topbar">
+    <a class="brand" href="/">ai<span class="tag">subsidy</span></a>
+    <div class="btns">
+      <a class="btn" href="/contribute">Contribute</a>
+      <a class="btn primary" href="https://buy.stripe.com/aFa8wO2PzaDKf7c0y8d7q00"
+         target="_blank" rel="noopener">Donate</a>
+    </div>
+  </nav>
+
   <header class="hero">
     <div>
-      <h1>Independent analysis of AI coding plans</h1>
+      <h1 class="hh">Independent analysis of AI coding plans</h1>
       <p class="sub">What each subscription costs, and the most it could possibly hand you at the vendor's own API rates.</p>
     </div>
     <div class="cards">
