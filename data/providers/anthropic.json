@@ -12,6 +12,21 @@
     { "model": "claude-sonnet-5", "name": "Claude Sonnet 5", "in": 3.0, "out": 15.0, "coding": true, "note": "intro $2/$10 through 2026-08-31" },
     { "model": "claude-haiku-4-5", "name": "Claude Haiku 4.5", "in": 1.0, "out": 5.0, "coding": false }
   ],
+  "measurements": [
+    {
+      "plan": "claude-max-20x",
+      "method": "local Claude Code session logs bucketed into fixed 5h windows, priced at the list API rates above",
+      "window": "5h",
+      "days": 30,
+      "turns": 78408,
+      "active_windows": 74,
+      "usd_per_window_median": 134,
+      "usd_per_window_p90": 541,
+      "usd_per_window_max": 900,
+      "checked": "2026-08-20",
+      "note": "One heavy user, one month. A user who never reaches the cap measures a floor rather than a ceiling, so p90 is quoted rather than max. Reproduce with `node probe/windows.js`."
+    }
+  ],
   "plans": [
     {
       "id": "claude-pro",

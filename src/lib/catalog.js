@@ -70,6 +70,9 @@ function derive(plan) {
     credit_multiple: null,
     usd_per_mtok: null,
     tokens_per_dollar: null,
+    max_spend_usd_month: null,
+    max_spend_basis: null,
+    max_spend_note: null,
     gradeable: false
   };
 
@@ -87,6 +90,45 @@ function derive(plan) {
 }
 
 const round = (n, d) => Number(n.toFixed(d));
+
+// Max possible spend: what the plan's ceiling is worth at the vendor's own API
+// rates. No vendor publishes this. It is only computable where somebody has
+// measured a saturated window, and it scales to sibling tiers through the
+// vendor's own published multiplier.
+//
+// Saturating every window of a month is nobody's real life, so this is an upper
+// bound and is labelled as one. p90 is used rather than max: one freak window
+// should not set the headline.
+const WINDOWS_PER_MONTH = (periodHours) => (24 / periodHours) * 30;
+const PERIOD_HOURS = { "5h": 5, "7d": 168, "30d": 720 };
+
+function attachMaxSpend(provider, plans) {
+  for (const m of provider.measurements || []) {
+    const base = plans.find((p) => p.id === m.plan);
+    if (!base) continue;
+
+    const baseWindow = (base.quota.windows || []).find((w) => w.unit === "relative");
+    if (!baseWindow) continue;
+
+    const hours = PERIOD_HOURS[m.window];
+    if (!hours) continue;
+    const perMonth = WINDOWS_PER_MONTH(hours);
+
+    for (const plan of plans) {
+      const w = (plan.quota.windows || []).find(
+        (x) => x.unit === "relative" && x.relative_to === baseWindow.relative_to
+      );
+      if (!w) continue;
+      const scale = w.amount / baseWindow.amount;
+      plan.derived.max_spend_usd_month = Math.round(m.usd_per_window_p90 * scale * perMonth);
+      plan.derived.max_spend_basis = plan.id === m.plan ? "measured" : "scaled";
+      plan.derived.max_spend_note =
+        plan.id === m.plan
+          ? `p90 of ${m.active_windows} measured ${m.window} windows, saturated across a month`
+          : `${m.plan} measured, scaled by the published ${w.amount}x multiplier`;
+    }
+  }
+}
 
 export function loadCatalog(dir) {
   const files = readdirSync(dir).filter((f) => f.endsWith(".json")).sort();
@@ -114,6 +156,7 @@ export function loadCatalog(dir) {
       plan.auth = raw.auth;
       plan.checked = raw.checked;
     }
+    attachMaxSpend(raw, raw.plans || []);
     providers.push(raw);
   }
 
