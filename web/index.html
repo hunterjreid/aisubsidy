@@ -189,9 +189,9 @@
   <nav class="topbar">
     <a class="brand" href="/">ai<span class="tag">subsidy</span></a>
     <div class="btns">
+      <a class="btn" href="/requests">Requests</a>
       <a class="btn" href="/contribute">Contribute</a>
-      <a class="btn primary" href="https://buy.stripe.com/aFa8wO2PzaDKf7c0y8d7q00"
-         target="_blank" rel="noopener">Donate</a>
+      <a class="btn primary" href="/donate">Donate</a>
     </div>
   </nav>
 
@@ -214,10 +214,10 @@
           <div class="d">Every vendor, plan and model, with a source URL and a checked date on each</div></div>
         <div class="arrow">&#8599;</div>
       </a>
-      <a class="cardlink" href="/contribute">
-        <div><div class="kicker">Contribute</div>
-          <div class="t">Measure a plan, or fix a number</div>
-          <div class="d">Run the drop-in skill, or edit one JSON file. A number needs a first-party source or it stays null</div></div>
+      <a class="cardlink" href="/requests">
+        <div><div class="kicker">Requests</div>
+          <div class="t">Ask for a vendor, or fix a number</div>
+          <div class="d">Public backlog, open by default. Or run the drop-in skill and send a measurement</div></div>
         <div class="arrow">&#8599;</div>
       </a>
     </div>
@@ -306,7 +306,8 @@ node probe/windows.js --days 30</pre>
     carrying a source URL and a checked date, each measurement carrying its
     method. Machine readable at <a href="/llms.txt">llms.txt</a>,
     <a href="/llms-full.txt">llms-full.txt</a> and <a href="/api/catalog">/api/catalog</a>.
-    MIT licensed. Corrections and measurements by pull request.
+    MIT licensed. Corrections and measurements by pull request. Public
+    <a href="/requests">backlog</a> and <a href="/api/visitors">traffic numbers</a>.
   </footer>
 </div>
 
@@ -388,9 +389,9 @@ function rowFor(p) {
     ${limitCell(p, ["5h"])}
     ${limitCell(p, ["7d", "30d"])}
     ${max}
-    <td class="go">${p.sources?.[0]
-      ? `<a href="${esc(p.sources[0])}" target="_blank" rel="noopener nofollow"
-           title="${esc(p.sources[0])}">${esc(host(p.sources[0]))} &#8599;</a>`
+    <td class="go">${p.signup_url
+      ? `<a href="${esc(p.signup_url)}" target="_blank" rel="noopener nofollow"
+           title="${esc(p.signup_url)}">${esc(host(p.signup_url))} &#8599;</a>`
       : '<span class="none">no link</span>'}</td>
   </tr>`;
 }

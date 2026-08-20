@@ -4,14 +4,16 @@
   "product": "Grok Build",
   "homepage": "https://x.ai/news/grok-build-cli",
   "auth": "oauth",
-  "surfaces": ["cli"],
+  "surfaces": [
+    "cli"
+  ],
   "checked": "2026-08-20",
   "api_prices": [
     {
       "model": "grok-4.6",
       "name": "Grok 4.6",
-      "in": 2.0,
-      "out": 6.0,
+      "in": 2,
+      "out": 6,
       "coding": true,
       "note": "cached input $0.50. A prompt at or above 200K tokens reprices the whole request to $4 in / $12 out. Priority Processing is 2x."
     }
@@ -23,14 +25,24 @@
       "price_usd_month": 30,
       "quota": {
         "kind": "rate_window",
-        "windows": [{ "period": "7d", "unit": "opaque" }],
+        "windows": [
+          {
+            "period": "7d",
+            "unit": "opaque"
+          }
+        ],
         "included_value_usd": null,
         "tokens_month": null,
         "confidence": "unknown",
         "note": "No standalone Grok Build subscription. Access rides an xAI or X plan."
       },
-      "models": ["grok-4.6"],
-      "sources": ["https://x.ai/news/grok-build-cli"]
+      "models": [
+        "grok-4.6"
+      ],
+      "sources": [
+        "https://x.ai/news/grok-build-cli"
+      ],
+      "signup_url": "https://x.ai/grok"
     },
     {
       "id": "x-premium-plus",
@@ -38,13 +50,23 @@
       "price_usd_month": 40,
       "quota": {
         "kind": "rate_window",
-        "windows": [{ "period": "7d", "unit": "opaque" }],
+        "windows": [
+          {
+            "period": "7d",
+            "unit": "opaque"
+          }
+        ],
         "included_value_usd": null,
         "tokens_month": null,
         "confidence": "unknown"
       },
-      "models": ["grok-4.6"],
-      "sources": ["https://x.ai/news/grok-build-cli"]
+      "models": [
+        "grok-4.6"
+      ],
+      "sources": [
+        "https://x.ai/news/grok-build-cli"
+      ],
+      "signup_url": "https://x.ai/grok"
     },
     {
       "id": "supergrok-heavy",
@@ -52,14 +74,24 @@
       "price_usd_month": 300,
       "quota": {
         "kind": "rate_window",
-        "windows": [{ "period": "7d", "unit": "opaque" }],
+        "windows": [
+          {
+            "period": "7d",
+            "unit": "opaque"
+          }
+        ],
         "included_value_usd": null,
         "tokens_month": null,
         "confidence": "unknown",
         "note": "Highest limits. Grok Build launched Heavy-only on 2026-05-14 and opened to the cheaper tiers ten days later."
       },
-      "models": ["grok-4.6"],
-      "sources": ["https://x.ai/news/grok-build-cli"]
+      "models": [
+        "grok-4.6"
+      ],
+      "sources": [
+        "https://x.ai/news/grok-build-cli"
+      ],
+      "signup_url": "https://x.ai/grok"
     }
   ]
 }

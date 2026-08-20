@@ -113,7 +113,8 @@
       "sources": [
         "https://claude.com/pricing",
         "https://she-llac.com/claude-limits"
-      ]
+      ],
+      "signup_url": "https://claude.com/pricing"
     },
     {
       "id": "claude-max-5x",
@@ -146,7 +147,8 @@
       "sources": [
         "https://claude.com/pricing",
         "https://she-llac.com/claude-limits"
-      ]
+      ],
+      "signup_url": "https://claude.com/pricing"
     },
     {
       "id": "claude-max-20x",
@@ -179,7 +181,8 @@
       "sources": [
         "https://claude.com/pricing",
         "https://she-llac.com/claude-limits"
-      ]
+      ],
+      "signup_url": "https://claude.com/pricing"
     }
   ]
 }

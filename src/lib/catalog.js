@@ -176,6 +176,7 @@ export function loadCatalog(dir) {
       plan.product = raw.product;
       plan.auth = raw.auth;
       plan.checked = raw.checked;
+      plan.signup_url = plan.signup_url || (plan.sources || [])[0] || null;
     }
     attachMaxSpend(raw, raw.plans || []);
     attachCreditCeiling(raw, raw.plans || []);

@@ -4,10 +4,19 @@
   "product": "GLM Coding Plan",
   "homepage": "https://docs.z.ai/devpack/overview",
   "auth": "oauth",
-  "surfaces": ["cli", "ide"],
+  "surfaces": [
+    "cli",
+    "ide"
+  ],
   "checked": "2026-08-20",
   "api_prices": [
-    { "model": "glm-5.3", "name": "GLM-5.3", "in": 1.4, "out": 4.4, "coding": true }
+    {
+      "model": "glm-5.3",
+      "name": "GLM-5.3",
+      "in": 1.4,
+      "out": 4.4,
+      "coding": true
+    }
   ],
   "plans": [
     {
@@ -18,17 +27,34 @@
       "quota": {
         "kind": "request_count",
         "windows": [
-          { "period": "5h", "unit": "prompts", "amount": 80 },
-          { "period": "7d", "unit": "prompts", "amount": 400 },
-          { "period": "7d", "unit": "credits", "amount": 10000 }
+          {
+            "period": "5h",
+            "unit": "prompts",
+            "amount": 80
+          },
+          {
+            "period": "7d",
+            "unit": "prompts",
+            "amount": 400
+          },
+          {
+            "period": "7d",
+            "unit": "credits",
+            "amount": 10000
+          }
         ],
         "included_value_usd": null,
         "tokens_month": null,
         "confidence": "published",
         "note": "One user prompt fans out to roughly 15-20 internal model calls but counts as one against quota. Third-party figures for Pro and Max conflict ($72/$80 and $160/$168)."
       },
-      "models": ["glm-5.3"],
-      "sources": ["https://docs.z.ai/devpack/overview"]
+      "models": [
+        "glm-5.3"
+      ],
+      "sources": [
+        "https://docs.z.ai/devpack/overview"
+      ],
+      "signup_url": "https://z.ai/subscribe"
     },
     {
       "id": "glm-pro",
@@ -37,13 +63,25 @@
       "price_usd_month_annual": 56,
       "quota": {
         "kind": "request_count",
-        "windows": [{ "period": "7d", "unit": "relative", "amount": 6, "relative_to": "glm-lite" }],
+        "windows": [
+          {
+            "period": "7d",
+            "unit": "relative",
+            "amount": 6,
+            "relative_to": "glm-lite"
+          }
+        ],
         "included_value_usd": null,
         "tokens_month": null,
         "confidence": "published"
       },
-      "models": ["glm-5.3"],
-      "sources": ["https://docs.z.ai/devpack/overview"]
+      "models": [
+        "glm-5.3"
+      ],
+      "sources": [
+        "https://docs.z.ai/devpack/overview"
+      ],
+      "signup_url": "https://z.ai/subscribe"
     },
     {
       "id": "glm-max",
@@ -52,13 +90,25 @@
       "price_usd_month_annual": 117.6,
       "quota": {
         "kind": "request_count",
-        "windows": [{ "period": "7d", "unit": "relative", "amount": 14, "relative_to": "glm-lite" }],
+        "windows": [
+          {
+            "period": "7d",
+            "unit": "relative",
+            "amount": 14,
+            "relative_to": "glm-lite"
+          }
+        ],
         "included_value_usd": null,
         "tokens_month": null,
         "confidence": "published"
       },
-      "models": ["glm-5.3"],
-      "sources": ["https://docs.z.ai/devpack/overview"]
+      "models": [
+        "glm-5.3"
+      ],
+      "sources": [
+        "https://docs.z.ai/devpack/overview"
+      ],
+      "signup_url": "https://z.ai/subscribe"
     }
   ]
 }

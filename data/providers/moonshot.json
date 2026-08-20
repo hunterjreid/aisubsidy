@@ -4,11 +4,27 @@
   "product": "Kimi Code",
   "homepage": "https://platform.moonshot.ai",
   "auth": "oauth",
-  "surfaces": ["cli", "ide"],
+  "surfaces": [
+    "cli",
+    "ide"
+  ],
   "checked": "2026-08-20",
   "api_prices": [
-    { "model": "kimi-k3", "name": "Kimi K3", "in": 3.0, "out": 15.0, "coding": true, "note": "cache-hit input $0.30. 2.8T parameters, released 2026-07-17." },
-    { "model": "kimi-k2.7-code", "name": "Kimi K2.7 Code", "in": 0.95, "out": 4.0, "coding": true }
+    {
+      "model": "kimi-k3",
+      "name": "Kimi K3",
+      "in": 3,
+      "out": 15,
+      "coding": true,
+      "note": "cache-hit input $0.30. 2.8T parameters, released 2026-07-17."
+    },
+    {
+      "model": "kimi-k2.7-code",
+      "name": "Kimi K2.7 Code",
+      "in": 0.95,
+      "out": 4,
+      "coding": true
+    }
   ],
   "plans": [
     {
@@ -17,14 +33,26 @@
       "price_usd_month": 19,
       "quota": {
         "kind": "request_count",
-        "windows": [{ "period": "5h", "unit": "calls", "amount": 300 }],
+        "windows": [
+          {
+            "period": "5h",
+            "unit": "calls",
+            "amount": 300
+          }
+        ],
         "included_value_usd": null,
         "tokens_month": null,
         "confidence": "derived",
         "note": "Kimi Code subscribers get their own keys with a call quota per rolling 5h window, not a token balance. Tiers span roughly 300-1200 calls. Consumer membership is priced in CNY on some surfaces; USD figures vary by source."
       },
-      "models": ["kimi-k3", "kimi-k2.7-code"],
-      "sources": ["https://platform.moonshot.ai"]
+      "models": [
+        "kimi-k3",
+        "kimi-k2.7-code"
+      ],
+      "sources": [
+        "https://platform.moonshot.ai"
+      ],
+      "signup_url": "https://platform.moonshot.ai"
     },
     {
       "id": "kimi-allegretto",
@@ -32,13 +60,25 @@
       "price_usd_month": 39,
       "quota": {
         "kind": "request_count",
-        "windows": [{ "period": "5h", "unit": "calls", "amount": 600 }],
+        "windows": [
+          {
+            "period": "5h",
+            "unit": "calls",
+            "amount": 600
+          }
+        ],
         "included_value_usd": null,
         "tokens_month": null,
         "confidence": "derived"
       },
-      "models": ["kimi-k3", "kimi-k2.7-code"],
-      "sources": ["https://platform.moonshot.ai"]
+      "models": [
+        "kimi-k3",
+        "kimi-k2.7-code"
+      ],
+      "sources": [
+        "https://platform.moonshot.ai"
+      ],
+      "signup_url": "https://platform.moonshot.ai"
     },
     {
       "id": "kimi-allegro",
@@ -46,14 +86,26 @@
       "price_usd_month": 99,
       "quota": {
         "kind": "request_count",
-        "windows": [{ "period": "5h", "unit": "calls", "amount": 1200 }],
+        "windows": [
+          {
+            "period": "5h",
+            "unit": "calls",
+            "amount": 1200
+          }
+        ],
         "included_value_usd": null,
         "tokens_month": null,
         "confidence": "derived",
         "note": "1M-token conversations"
       },
-      "models": ["kimi-k3", "kimi-k2.7-code"],
-      "sources": ["https://platform.moonshot.ai"]
+      "models": [
+        "kimi-k3",
+        "kimi-k2.7-code"
+      ],
+      "sources": [
+        "https://platform.moonshot.ai"
+      ],
+      "signup_url": "https://platform.moonshot.ai"
     }
   ]
 }

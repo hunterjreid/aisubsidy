@@ -107,8 +107,9 @@ function page({ path, title, description, body, jsonld }) {
 </head>
 <body><div class="wrap">
 <nav class="bar"><span><a href="/">aisubsidy</a> / ${esc(title)}</span>
-  <span class="btns"><a class="btn" href="/contribute">Contribute</a>
-  <a class="btn primary" href="https://buy.stripe.com/aFa8wO2PzaDKf7c0y8d7q00" rel="noopener">Donate</a></span></nav>
+  <span class="btns"><a class="btn" href="/requests">Requests</a>
+  <a class="btn" href="/contribute">Contribute</a>
+  <a class="btn primary" href="/donate">Donate</a></span></nav>
 ${body}
 <footer>
   Part of <a href="/">aisubsidy</a>, an open catalogue of AI coding subscription
@@ -473,6 +474,8 @@ function sitemap(catalog) {
   const urls = [
     { loc: SITE + "/", priority: "1.0", freq: "weekly" },
     { loc: SITE + "/contribute", priority: "0.9", freq: "monthly" },
+    { loc: SITE + "/donate", priority: "0.6", freq: "monthly" },
+    { loc: SITE + "/requests", priority: "0.7", freq: "daily" },
     ...catalog.plans.map((p) => ({ loc: `${SITE}/plan/${slug(p.id)}`, priority: "0.8", freq: "weekly", lastmod: p.checked })),
     ...catalog.models.map((m) => ({ loc: `${SITE}/model/${slug(m.id)}`, priority: "0.7", freq: "weekly", lastmod: m.checked }))
   ];
